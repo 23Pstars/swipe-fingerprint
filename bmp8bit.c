@@ -10,7 +10,7 @@
 int main() {
 
     int i, j;
-    HEADER header;
+    FILEHEADER header;
     INFOHEADER infoheader;
     COLOURINDEX colourindex;
     FILE *bmp_source_ptr, *bmp_target_ptr;
@@ -21,11 +21,11 @@ int main() {
         return -1;
     }
 
-    fprintf( stderr, "File header size: %zu\n", sizeof( HEADER ) );
+    fprintf( stderr, "File header size: %zu\n", sizeof( FILEHEADER ) );
     fprintf( stderr, "Short(%zu), Int(%zu), Long(%zu)\n", sizeof(short), sizeof(int), sizeof(long) );
 
     /* read file header */
-    if( fread( &header, sizeof( HEADER ), 1, bmp_source_ptr ) != 1 ) {
+    if( fread( &header, sizeof( FILEHEADER ), 1, bmp_source_ptr ) != 1 ) {
         fprintf( stderr, "Failed to read file header\n" );
         return -1;
     }
