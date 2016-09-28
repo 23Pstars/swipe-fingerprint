@@ -65,6 +65,13 @@ int main() {
         }
     }
 
+    /* sum of absolute differences (SAD) */
+    for (i = 0; i < rate; i++) {
+        for (j = 0; j < SAMPLING_SIZE; j++) {
+
+        }
+    }
+
 
     /* WRITE IT AGAIN */
 
