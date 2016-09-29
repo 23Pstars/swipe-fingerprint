@@ -9,4 +9,8 @@ int SAD(unsigned char **, unsigned char **, int, int);
 
 float ZSAD(unsigned char **, unsigned char **, int, int);
 
+int SSD(unsigned char **, unsigned char **, int, int);
+
+float ZSSD(unsigned char **, unsigned char **, int, int);
+
 float mean(unsigned char **);

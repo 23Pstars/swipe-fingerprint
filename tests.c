@@ -21,8 +21,10 @@ int main(int argc, char *argv[]) {
         *(target_ptr + i) = target[i];
     }
 
-    printf("SAD: %d\n", SAD(source_ptr, target_ptr, 1, 0));
+    printf("SAD: %d\n", SAD(source_ptr, target_ptr, 0, 0));
     printf("ZSAD: %f\n", ZSAD(source_ptr, target_ptr, 0, 0));
+    printf("SSD: %d\n", SSD(source_ptr, target_ptr, 0, 0));
+    printf("ZSSD: %f\n", ZSSD(source_ptr, target_ptr, 0, 0));
 
     return 0;
 }

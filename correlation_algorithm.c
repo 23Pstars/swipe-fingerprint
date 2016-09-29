@@ -24,7 +24,30 @@ float ZSAD(unsigned char **source, unsigned char **target, int h_shift, int w_sh
     for (i = 0; i < CORR_HEIGHT_SIZE; i++)
         for (j = 0; j < CORR_WIDTH_SIZE; j++)
             sum += fabs(((i + h_shift > CORR_HEIGHT_SIZE - 1 || j + w_shift > CORR_WIDTH_SIZE - 1 ?
-                         0 : *(*(source + i + h_shift) + j + w_shift)) - source_mean) - (*(*(target + i) + j) - target_mean));
+                          0 : *(*(source + i + h_shift) + j + w_shift)) - source_mean) -
+                        (*(*(target + i) + j) - target_mean));
+    return sum;
+}
+
+/* Sum of Squared Differences */
+int SSD(unsigned char **source, unsigned char **target, int h_shift, int w_shift) {
+    int i, j, sum = 0;
+    for (i = 0; i < CORR_HEIGHT_SIZE; i++)
+        for (j = 0; j < CORR_WIDTH_SIZE; j++)
+            sum += pow(((i + h_shift > CORR_HEIGHT_SIZE - 1 || j + w_shift > CORR_WIDTH_SIZE - 1 ? 0 : *(
+                    *(source + i + h_shift) + j + w_shift)) - *(*(target + i) + j)), 2);
+    return sum;
+}
+
+/* Zero-mean Sum of Squared Differences */
+float ZSSD(unsigned char **source, unsigned char **target, int h_shift, int w_shift) {
+    int i, j;
+    float sum = 0, source_mean = mean(source), target_mean = mean(target);
+    for (i = 0; i < CORR_HEIGHT_SIZE; i++)
+        for (j = 0; j < CORR_WIDTH_SIZE; j++)
+            sum += pow((((i + h_shift > CORR_HEIGHT_SIZE - 1 || j + w_shift > CORR_WIDTH_SIZE - 1 ?
+                          0 : *(*(source + i + h_shift) + j + w_shift)) - source_mean) -
+                        (*(*(target + i) + j) - target_mean)), 2);
     return sum;
 }
 
