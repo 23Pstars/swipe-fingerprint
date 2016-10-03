@@ -3,28 +3,16 @@
 
 #include "correlation_algorithm.h"
 
+#define     CORR_WIDTH_SIZE       5
+#define     CORR_HEIGHT_SIZE      3
 
-int main(int argc, char *argv[]) {
+int main() {
 
-    unsigned char source[CORR_HEIGHT_SIZE][CORR_WIDTH_SIZE] = {{2, 5, 5, 5, 3},
-                                                               {2, 8, 6, 5, 6}},
-            target[CORR_HEIGHT_SIZE][CORR_WIDTH_SIZE] = {{2, 7, 5, 8, 6},
-                                                         {1, 7, 4, 2, 7}};
+    u_int8_t source[CORR_HEIGHT_SIZE * CORR_WIDTH_SIZE] = {2, 5, 5, 5, 3, 2, 8, 6, 5, 6, 2, 5, 5, 5, 3},
+            target[CORR_HEIGHT_SIZE * CORR_WIDTH_SIZE] = {2, 7, 5, 8, 6, 1, 7, 4, 2, 7, 2, 7, 5, 8, 6};
 
-    unsigned char **source_ptr = malloc(sizeof(unsigned char *) * CORR_HEIGHT_SIZE);
-    unsigned char **target_ptr = malloc(sizeof(unsigned char *) * CORR_HEIGHT_SIZE);
-
-    for (int i = 0; i < CORR_HEIGHT_SIZE; i++) {
-        *(source_ptr + i) = malloc(sizeof(unsigned char) * CORR_WIDTH_SIZE);
-        *(source_ptr + i) = source[i];
-        *(target_ptr + i) = malloc(sizeof(unsigned char) * CORR_WIDTH_SIZE);
-        *(target_ptr + i) = target[i];
-    }
-
-    printf("SAD: %d\n", SAD(source_ptr, target_ptr, 0, 0));
-    printf("ZSAD: %f\n", ZSAD(source_ptr, target_ptr, 0, 0));
-    printf("SSD: %d\n", SSD(source_ptr, target_ptr, 0, 0));
-    printf("ZSSD: %f\n", ZSSD(source_ptr, target_ptr, 0, 0));
+    printf("SAD: %d\n", SAD(source, target, CORR_HEIGHT_SIZE, CORR_WIDTH_SIZE, 0, 0));
+    printf("ZSAD: %f\n", ZSAD(source, target, CORR_HEIGHT_SIZE, CORR_WIDTH_SIZE, 0, 1));
 
     return 0;
 }

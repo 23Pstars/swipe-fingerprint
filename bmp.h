@@ -1,33 +1,35 @@
 /**
- * short --> 2 bytes
- * int --> 4 bytes
- * long --> 8 bytes
+ * char (int8_t)        --> 1 byte
+ * short (int16_t)      --> 2 bytes
+ * int (int32_t)        --> 4 bytes
+ * long (int64_t)       --> 8 bytes
  *
  * kadang berlaku juga padding
  * - http://www.c-faq.com/struct/align.html
  */
 
 typedef struct {
-    unsigned short type;                        /* identifikasi jenis gambar */
-    unsigned int size;                          /* file size in bytes */
-    unsigned short reserved1;                   /* tidak digunakan */
-    unsigned short reserved2;                   /* tidak digunakan */
-    unsigned int offset;                        /* offset ke data gambar */
+    u_int16_t type;                             /* identifikasi jenis gambar */
+    u_int32_t size;                             /* file size in bytes */
+    u_int16_t reserved1;                        /* tidak digunakan */
+    u_int16_t reserved2;                        /* tidak digunakan */
+    u_int32_t offset;                           /* offset ke data gambar */
 } FILEHEADER;
 
 typedef struct {
-    unsigned int size;                          /* ukuran infoheader */
-    int width, height;                          /* lebar dan tinggi */
-    unsigned short planes;                      /* jumlah color planes */
-    unsigned short bits;                        /* bits tiap pixel */
-    unsigned int compression;                   /* tipe kompresi */
-    unsigned int imagesize;                     /* ukuran data gambar */
-    int xresolution, yresolution;               /* pizel per meter */
-    unsigned int ncolours;                      /* jumlah warna */
-    unsigned int importantcolours;              /* warna penting */
+    u_int32_t size;                             /* ukuran infoheader */
+    int32_t width, height;                      /* lebar dan tinggi */
+    u_int16_t planes;                           /* jumlah color planes */
+    u_int16_t bits;                             /* bits tiap pixel */
+    u_int32_t compression;                      /* tipe kompresi */
+    u_int32_t imagesize;                        /* ukuran data gambar */
+    int32_t xresolution, yresolution;           /* pizel per meter */
+    u_int32_t  ncolours;                        /* jumlah warna */
+    u_int32_t  importantcolours;                /* warna penting */
 } INFOHEADER;
 
 typedef struct {
-    unsigned char r, g, b, junk;                /* terkumpul dalam 1 byte */
+    u_int16_t r, g, b, junk;                    /* terkumpul dalam 1 byte */
 } COLOURINDEX;
 
+void reverse_order(u_int8_t *, u_int8_t *, int32_t, int32_t, uint8_t);

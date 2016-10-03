@@ -1,16 +1,9 @@
 //
-// Created by Ahmad Zafrullah on 9/27/16.
+// Created by Ahmad Zafrullah on 10/3/16.
 //
 
-#define     CORR_WIDTH_SIZE       5
-#define     CORR_HEIGHT_SIZE      2
+u_int16_t SAD(u_int8_t *, u_int8_t *, u_int16_t, u_int16_t, int8_t, int8_t);
 
-int SAD(unsigned char **, unsigned char **, int, int);
+float ZSAD(u_int8_t *, u_int8_t *, u_int16_t, u_int16_t, int8_t, int8_t);
 
-float ZSAD(unsigned char **, unsigned char **, int, int);
-
-int SSD(unsigned char **, unsigned char **, int, int);
-
-float ZSSD(unsigned char **, unsigned char **, int, int);
-
-float mean(unsigned char **);
+float mean(u_int8_t *, u_int16_t);
