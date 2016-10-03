@@ -43,6 +43,7 @@ int main() {
     fread(&infoheader, sizeof(INFOHEADER), 1, bmp_source_ptr);
     if (infoheader.bits != BMP_INFO_BIT) {
         printf("Only support BMP 8 bits\n");
+        return -1;
     }
 
     /*  color index */
