@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <math.h>
+#include <printf.h>
 
 #include "correlation_algorithm.h"
 
@@ -73,8 +74,8 @@ u_int32_t SSD(u_int8_t *source, u_int8_t *target, u_int16_t height, u_int16_t wi
         for (j = 0; j < width; j++) {
 
             if (j + w_shift < 0 || j + w_shift > width - 1)
-                sum += 0;
-//                sum += abs((source[(i * width) + j]) << 2);
+//                sum += 0;
+                sum += abs((source[(i * width) + j]) << 2);
             else
                 sum += abs((source[(i * width) + j] - target[((i + h_shift) * width) + (j + w_shift)]) << 2);
 
@@ -82,6 +83,40 @@ u_int32_t SSD(u_int8_t *source, u_int8_t *target, u_int16_t height, u_int16_t wi
     }
 
     return sum;
+}
+
+/**
+ * Normalized Cross Correlation
+ *
+ * @param source
+ * @param target
+ * @param height
+ * @param width
+ * @param h_shift
+ * @param w_shift
+ * @return
+ */
+float NCC(u_int8_t *source, u_int8_t *target, u_int16_t height, u_int16_t width, int8_t h_shift, int8_t w_shift) {
+
+    u_int8_t i, j;
+    u_int16_t length = height * width;
+    float sum = 0, source_sum_squared = sum_squared(source, length, 0),
+            target_sum_squared = sum_squared(target, length, h_shift * width);
+
+    for (i = 0; i < height; i++) {
+
+        for (j = 0; j < width; j++) {
+
+            if (j + w_shift < 0 || j + w_shift > width - 1)
+//                sum += 0;
+                sum += source[(i * width) + j];
+            else
+                sum += source[(i * width) + j] * target[((i + h_shift) * width) + (j + w_shift)];
+
+        }
+    }
+
+    return sum / sqrtf(source_sum_squared * target_sum_squared);
 }
 
 /**
@@ -118,6 +153,17 @@ float ZSAD(u_int8_t *source, u_int8_t *target, u_int16_t height, u_int16_t width
     return sum;
 }
 
+/**
+ * Zero-mean Sum of Squared Differences
+ *
+ * @param source
+ * @param target
+ * @param height
+ * @param width
+ * @param h_shift
+ * @param w_shift
+ * @return
+ */
 float ZSSD(u_int8_t *source, u_int8_t *target, u_int16_t height, u_int16_t width, int8_t h_shift, int8_t w_shift) {
 
     u_int8_t i, j;
@@ -141,11 +187,64 @@ float ZSSD(u_int8_t *source, u_int8_t *target, u_int16_t height, u_int16_t width
     return sum;
 }
 
+/**
+ * Zero-mean Normalised Cross Correlation
+ *
+ * @param source
+ * @param target
+ * @param height
+ * @param width
+ * @param h_shift
+ * @param w_shift
+ * @return
+ */
+float ZNCC(u_int8_t *source, u_int8_t *target, u_int16_t height, u_int16_t width, int8_t h_shift, int8_t w_shift) {
+
+    u_int8_t i, j;
+    u_int16_t length = height * width;
+    float sum = 0, source_mean = mean(source, length, 0), target_mean = mean(target, length, h_shift * width),
+            source_sum_mean_squared = sum_mean_squared(source, length, 0),
+            target_sum_mean_squared = sum_mean_squared(target, length, h_shift * width);
+
+    for (i = 0; i < height; i++) {
+
+        for (j = 0; j < width; j++) {
+
+            if (j + w_shift < 0 || j + w_shift > width - 1)
+//                sum += 0;
+                sum += source[(i * width) + j] - source_mean;
+            else
+                sum += (source[(i * width) + j] - source_mean) *
+                       (target[((i + h_shift) * width) + (j + w_shift)] - target_mean);
+
+        }
+    }
+
+    return sum / sqrtf(source_sum_mean_squared * target_sum_mean_squared);
+}
+
 /* Mean of Block array */
 float mean(u_int8_t *block, u_int16_t length, u_int16_t shift) {
     u_int16_t i;
-    float sum = 0;
+    float __sum = 0;
     for (i = 0; i < length; i++)
-        sum += *(block + i + shift);
-    return sum / length;
+        __sum += *(block + i + shift);
+    return __sum / length;
+}
+
+/* Sum of squared block array */
+float sum_squared(u_int8_t *block, u_int16_t length, u_int16_t shift) {
+    u_int16_t i;
+    float __sum = 0;
+    for (i = 0; i < length; i++)
+        __sum += powf(*(block + i + shift), 2);
+    return __sum;
+}
+
+float sum_mean_squared(u_int8_t *block, u_int16_t length, u_int16_t shift) {
+    u_int16_t i;
+    float __sum = 0, __mean = mean(block, length, shift);
+    for (i = 0; i < length; i++)
+        __sum += powf(*(block + i + shift) - __mean, 2);
+    return __sum;
 }

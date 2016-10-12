@@ -185,17 +185,28 @@ int main() {
             for (k = (int8_t) __min_w_diff; k < WIDTH_RANGE_OFFSET; k++) {
 
                 /**
+                 * hindari mencocokan dengan block yang sama
+                 * atau dirinya sendiri
+                 */
+                if (j == 0 && k == 0)
+                    continue;
+
+                /**
                  * jika terdapat perbedaan yang lebih kecil
                  * diantara semua perbandingan vertical dan horizontal
+                 *
+                 * Gunakan algoritma korelasi yang ada:
+                 * - SAD (best minimum)
+                 * - ZSAD (best minimum)
+                 * - SSD (best minimum)
+                 * - ZSSD (best minimum)
+                 *
+                 * - NCC (best maximum)
+                 * - ZNNC (best maximum)
                  */
-                __min_diff_tmp = (u_int32_t) ZSSD(block_source, block_target, SAMPLING_SIZE,
-                                                  (u_int16_t) infoheader.width,
-                                                  (int8_t) (j + SAMPLING_SIZE), (int8_t) k);
-
-//                __min_diff_tmp = (u_int32_t) ceilf(ZSAD(block1, block2, SAMPLING_SIZE, (u_int16_t) infoheader.width, (int8_t) j,
-//                                                        (int8_t) k));
-//                __min_diff_tmp = (u_int8_t) SAD(block1, block2, SAMPLING_SIZE, 3, (int8_t) j, (int8_t) k);
-//                printf("diff tmp: %d, diff: %d\n", __min_diff_tmp, __min_diff);
+                __min_diff_tmp = (u_int32_t) NCC(block_source, block_target, SAMPLING_SIZE,
+                                                 (u_int16_t) infoheader.width,
+                                                 (int8_t) (j + SAMPLING_SIZE), (int8_t) k);
 
                 /**
                  * jika memenuhi treshold lanjutkan

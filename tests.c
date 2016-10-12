@@ -263,9 +263,11 @@ int main() {
 //
 //    printf("\n");
 
-    for (int8_t i = -8; i <= 8; i++) {
-        for (int8_t j = -8; j <= 8; j++) {
-            printf("%d:%d = %d\n", i, j, (u_int32_t) ZSAD(source2, target2, 8, 128, (int8_t) (i + 8), j));
+    for (int8_t i = -3; i <= 3; i++) {
+        for (int8_t j = -3; j <= 3; j++) {
+            if (i == 0 && j == 0) continue;
+            printf("%d:%d = %f\n", i, j, ZNCC(source2, target2, 8, 128, (int8_t) (i + 8), j));
+//            printf("%d:%d = %f\n", i, j, NCC(source, target, 3, 3, (int8_t) (i + 3), j));
         }
         printf("\n");
     }
