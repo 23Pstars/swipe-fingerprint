@@ -24,12 +24,14 @@ typedef struct {
     u_int32_t compression;                      /* tipe kompresi */
     u_int32_t imagesize;                        /* ukuran data gambar */
     int32_t xresolution, yresolution;           /* pizel per meter */
-    u_int32_t  ncolours;                        /* jumlah warna */
-    u_int32_t  importantcolours;                /* warna penting */
+    u_int32_t ncolours;                        /* jumlah warna */
+    u_int32_t importantcolours;                /* warna penting */
 } INFOHEADER;
 
 typedef struct {
     u_int16_t r, g, b, junk;                    /* terkumpul dalam 1 byte */
 } COLOURINDEX;
 
-void reverse_order(u_int8_t *, u_int8_t *, int32_t, int32_t, uint8_t);
+void block_reverse(u_int8_t *, u_int8_t *, int32_t, int32_t, uint8_t);
+
+u_int8_t *block_slice(u_int8_t *, int32_t, int32_t, u_int16_t, u_int16_t, u_int16_t, u_int16_t);
