@@ -31,6 +31,57 @@ void block_reverse(u_int8_t *source, u_int8_t *target, int32_t height, int32_t w
 }
 
 /**
+ * merge suatu block (source) kedalam suatu data (target)
+ *
+ * @param source, block yang akan di-merge
+ * @param target, data utuh tujuan merge
+ * @param height, tinggi dari block yang akan di-merge (source)
+ * @param width, lebar dari block yang akan di-merge (source)
+ * @param offset, offset untuk tiap block target didalam target
+ * @param h_shift, pergeseran (vertical) source dari target
+ * @param w_shift, pergeseran (horizontal) source dari target
+ * @param default_w_value, default value untuk pergeseran horizontal
+ */
+void block_merge(u_int8_t *source, u_int8_t *target, u_int8_t height, u_int8_t width, int16_t offset, int16_t h_shift,
+                 int16_t w_shift, u_int8_t default_w_value) {
+
+    u_int16_t i, j;
+
+//    printf("\n\noffset: %d, h_shift: %d, w_shift: %d\n", offset, h_shift, w_shift);
+
+    /**
+     * looping untuk setiap row setinggi height dari source
+     */
+    for (i = 0; i < height; i++) {
+
+        /**
+         * looping untuk setiap cell sepanjang width dari source
+         */
+        for (j = 0; j < width; j++) {
+
+            if (j + w_shift < 0) {                          /** geser kiri */
+//                printf("h;%d w;%d %d:%d\t\t", i, j, *(target + ((offset + i + h_shift + 1) * width) + j + w_shift),
+//                       default_w_value);
+//                target[((offset + i + h_shift + 1) * width) + j + w_shift] = default_w_value;
+                *(target + ((offset + i + h_shift + 1) * width) + j + w_shift) = default_w_value;
+            } else if (j + w_shift > width - 1) {           /** geser kanan */
+//                printf("h;%d w;%d %d:%d\t\t", i, j, *(target + ((offset + i + h_shift - 1) * width) + j + w_shift),
+//                       default_w_value);
+//                target[((offset + i + h_shift - 1) * width) + j + w_shift] = default_w_value;
+                *(target + ((offset + i + h_shift - 1) * width) + j + w_shift) = default_w_value;
+            } else {
+//                printf("h:%d w:%d %d:%d\t\t", i, j,
+//                       *(target + ((offset + i + h_shift) * width) + j + w_shift), *(source + (i * width) + j));
+//                target[((offset + i + h_shift) * width) + j + w_shift] = source[(i * width) + j];
+                *(target + ((offset + i + h_shift) * width) + j + w_shift) = *(source + (i * width) + j);
+            }
+        }
+//        printf("\n");
+    }
+
+}
+
+/**
  * potong array menjadi bagian yang diinginkan
  *
  * @param source, data utuh

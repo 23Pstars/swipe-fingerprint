@@ -227,12 +227,17 @@ int main() {
 //    printf("mean, source: %f\n", mean(source2, 128 * 8, 0));
 //    return -1;
 
-//    u_int8_t source[9] = {
+//    u_int8_t source[3 * 3] = {
 //            2, 5, 6,
 //            5, 4, 2,
 //            7, 4, 2},
 //
-//            target[27] = {
+//            source_to_merge[3 * 3] = {
+//            9, 9, 9,
+//            9, 9, 9,
+//            9, 9, 9},
+//
+//            target[3 * 3 * 3] = {
 //            3, 2, 1,
 //            9, 8, 7,
 //            2, 5, 6,
@@ -244,7 +249,7 @@ int main() {
 //            7, 6, 5,
 //            4, 4, 3,
 //            7, 8, 6};
-//
+
 //    printf("Mean: %f\n", mean(source, 9, 0));
 //    printf("Mean: %f\n", mean(target, 9, 0));
 //    printf("Mean: %f\n", mean(target, 9, 1 * 3));
@@ -255,22 +260,79 @@ int main() {
 //    u_int8_t *target2 = block_slice(source, CORR_HEIGHT_SIZE, CORR_WIDTH_SIZE, 3, 3, 0, 0);
 //
 //    for (u_int8_t i = 0; i < 9; i++)
-//        printf("%s%d\t", (i % 3 == 0 ? "\n" : ""), *(target2 + i));
-//
+//        printf("%s%d\t", (i % 3 == 0 ? "\n" : ""), *(source + i));
 //    printf("\n");
-//    for (u_int8_t i = 0; i < 9; i++)
+
+//    block_merge(source_to_merge, target, 3, 3, -2, 0, 0);
+//
+//    for (u_int8_t i = 0; i < 3 * 9; i++)
 //        printf("%s%d\t", (i % 3 == 0 ? "\n" : ""), *(target + i));
 //
 //    printf("\n");
 
-    for (int8_t i = -3; i <= 3; i++) {
-        for (int8_t j = -3; j <= 3; j++) {
-            if (i == 0 && j == 0) continue;
-            printf("%d:%d = %f\n", i, j, ZNCC(source2, target2, 8, 128, (int8_t) (i + 8), j));
-//            printf("%d:%d = %f\n", i, j, NCC(source, target, 3, 3, (int8_t) (i + 3), j));
-        }
-        printf("\n");
+    int16_t h_offset = 8, h_shift[2] = {-3, -2}, w_shift = 1;
+
+    /**
+     * ada 3 block di target, setidaknya ada 2 kali looping
+     */
+    for (u_int8_t i = 0; i < 2; i++) {
+        block_merge(source2, target2, 8, 128, h_offset, h_shift[i], w_shift, 0);
+        h_offset += h_shift[i] + 8;
     }
+
+    /**
+     * source
+     */
+    for (u_int16_t i = 0; i < (8 * 128); i++)
+        printf("%s%d\t", (i % 128 == 0 ? "\n" : ""), *(source2 + i));
+
+    printf("\n\n\n");
+
+    /**
+     * target
+     */
+    for (u_int16_t i = 0; i < (3 * 8 * 128); i++)
+        printf("%s%d\t", (i % 128 == 0 ? "\n" : ""), *(target2 + i));
+
+    printf("\n\n\n");
+
+    /**
+     * merged result
+     */
+    for (u_int16_t i = 0; i < (3 * 8 * 128); i++)
+        printf("%s%d\t", (i % 128 == 0 ? "\n" : ""), *(target2 + i));
+
+    printf("\n\n\n");
+
+//    /**
+//     * hasilnya adalah 3 blok pertama semua menjadi 9
+//     */
+//    int16_t h_offset = 0, h_shift[2] = {-2, -1}, w_shift = -1;
+//
+//    /**
+//     * ada 3 block di target, setidaknya ada 2 kali looping
+//     */
+//    for (u_int8_t i = 0; i < 2; i++) {
+//        block_merge(source_to_merge, target, 3, 3, h_offset, h_shift[i], w_shift, 0);
+//        h_offset = (int16_t) (h_shift[i] + 3);
+//    }
+//
+//    /**
+//     * tampilkan hasilnya
+//     */
+//    for (u_int8_t i = 0; i < 3 * 9; i++)
+//        printf("%s%d\t", (i % 3 == 0 ? "\n" : ""), *(target + i));
+//
+//    printf("\n");
+
+//    for (int8_t i = -3; i <= 0; i++) {
+//        for (int8_t j = -3; j <= 3; j++) {
+//            if (i == 0 && j == 0) continue;
+////            printf("%d:%d = %d\n", i, j, SAD(source2, target2, 8, 128, (int8_t) (i + 8), j));
+//            printf("%d:%d = %d\n", i, j, SAD(source, target, 3, 3, (int8_t) (i + 3), j));
+//        }
+//        printf("\n");
+//    }
 
 //    printf("SAD: %d\n", SAD(source, target, 3, 3, (int8_t) (h_shift + 3), w_shift));
 //    printf("ZSAD: %f\n", ZSAD(source, target, CORR_HEIGHT_SIZE, CORR_WIDTH_SIZE, 0, 0));

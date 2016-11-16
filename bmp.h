@@ -34,4 +34,6 @@ typedef struct {
 
 void block_reverse(u_int8_t *, u_int8_t *, int32_t, int32_t, uint8_t);
 
+void block_merge(u_int8_t *, u_int8_t *, u_int8_t, u_int8_t, int16_t, int16_t, int16_t, u_int8_t);
+
 u_int8_t *block_slice(u_int8_t *, int32_t, int32_t, u_int16_t, u_int16_t, u_int16_t, u_int16_t);
