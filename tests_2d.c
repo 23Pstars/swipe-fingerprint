@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "correlation_algorithm_2d.h"
+#include "corr_2d.h"
 
 
 int main() {

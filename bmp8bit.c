@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 #include "bmp.h"
-#include "data.h"
+#include "config.h"
 
 #define     BMP_INFO_BIT                8
 #define     BMP_COLOUR_INDEX_LENGTH     256

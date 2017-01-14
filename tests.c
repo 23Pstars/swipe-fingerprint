@@ -2,7 +2,7 @@
 #include <stdlib.h>
 
 #include "bmp.h"
-#include "correlation_algorithm.h"
+#include "corr.h"
 
 #define     CORR_WIDTH_SIZE       3
 #define     CORR_HEIGHT_SIZE      4

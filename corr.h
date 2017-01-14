@@ -1,6 +1,4 @@
-//
-// Created by Ahmad Zafrullah on 10/3/16.
-//
+void reconstruct(u_int8_t *, u_int8_t *, int32_t, int32_t);
 
 u_int32_t SAD(u_int8_t *, u_int8_t *, u_int16_t, u_int16_t, int8_t, int8_t);
 

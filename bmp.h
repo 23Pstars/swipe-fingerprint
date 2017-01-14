@@ -32,6 +32,14 @@ typedef struct {
     u_int16_t r, g, b, junk;                    /* terkumpul dalam 1 byte */
 } COLOURINDEX;
 
+FILE *open_bmp();
+
+void read_bmp_header(FILEHEADER *, INFOHEADER *, COLOURINDEX *);
+
+void read_bmp_pixel_image(u_int8_t *, u_int32_t, u_int32_t);
+
+void write_bmp(FILEHEADER *, INFOHEADER *, COLOURINDEX *, u_int8_t *);
+
 void block_reverse(u_int8_t *, u_int8_t *, int32_t, int32_t, uint8_t);
 
 void block_merge(u_int8_t *, u_int8_t *, u_int8_t, u_int8_t, int16_t, int16_t, int16_t, u_int8_t);

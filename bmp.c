@@ -2,6 +2,158 @@
 #include <printf.h>
 
 #include "bmp.h"
+#include "config.h"
+
+/**
+ * buka buffer BMP
+ *
+ * @return bmp_ptr
+ */
+FILE *open_bmp() {
+
+    /**
+     * buffer BMP
+     */
+    FILE *bmp_ptr;
+
+    /**
+     * cek apakah berhasil akses file BMP
+     */
+    if ((bmp_ptr = fopen(BMP_SOURCE, "r")) == NULL) {
+        printf("Failed to open %s\n", BMP_SOURCE);
+        exit(-1);
+    }
+
+    return bmp_ptr;
+}
+
+/**
+ * baca file BMP
+ *
+ * @param fileheader
+ * @param infoheader
+ * @param colourindex
+ * @param pixel_image
+ */
+void read_bmp_header(FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX *colourindex) {
+
+    FILE *bmp_source_ptr = open_bmp();
+
+    /**
+     * baca file header
+     */
+    fread(&fileheader->type, 2, 1, bmp_source_ptr);
+    fread(&fileheader->size, 4, 1, bmp_source_ptr);
+    fread(&fileheader->reserved1, 2, 1, bmp_source_ptr);
+    fread(&fileheader->reserved2, 2, 1, bmp_source_ptr);
+    fread(&fileheader->offset, 4, 1, bmp_source_ptr);
+
+    /**
+     * deteksi jenis BMP
+     */
+    if (fileheader->type != 0x4d42) {
+        printf("File is not BMP (%x)\n", fileheader->type);
+        exit(-1);
+    }
+
+    /**
+     * baca info header
+     */
+    fread(infoheader, sizeof(INFOHEADER), 1, bmp_source_ptr);
+
+    /**
+     * deteksi jenis BIT
+     */
+    if (infoheader->bits != BMP_INFO_BIT) {
+        printf("Only support BMP 8 bits\n");
+        exit(-1);
+    }
+
+    /**
+     * color index (opsional)
+     */
+    fread(colourindex, sizeof(COLOURINDEX), BMP_COLOUR_INDEX_LENGTH, bmp_source_ptr);
+
+    /**
+     * close the file pointer
+     */
+    fclose(bmp_source_ptr);
+
+}
+
+/**
+ * baca data pixel BMP
+ *
+ * @param pixel_image
+ * @param imagesize
+ * @param offset
+ */
+void read_bmp_pixel_image(u_int8_t *pixel_image, u_int32_t imagesize, u_int32_t offset) {
+
+    FILE *bmp_source_ptr = open_bmp();
+
+    /**
+     * geser ke data utama
+     */
+    fseek(bmp_source_ptr, offset, SEEK_SET);
+
+    /**
+     * baca pixel data
+     */
+    fread(pixel_image, 1, imagesize, bmp_source_ptr);
+
+    fclose(bmp_source_ptr);
+}
+
+/**
+ * tulis file BMP
+ *
+ * @param fileheader
+ * @param infoheader
+ * @param colourindex
+ * @param pixel_image
+ */
+void write_bmp(FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX *colourindex, u_int8_t *pixel_image) {
+
+    FILE *bmp_target_ptr;
+
+    if ((bmp_target_ptr = fopen(BMP_TARGET, "wb")) == NULL) {
+        printf("Failed to open %s", BMP_TARGET);
+    }
+
+    /* file header */
+    fwrite(&fileheader->type, 2, 1, bmp_target_ptr);
+    fwrite(&fileheader->size, 4, 1, bmp_target_ptr);
+    fwrite(&fileheader->reserved1, 2, 1, bmp_target_ptr);
+    fwrite(&fileheader->reserved2, 2, 1, bmp_target_ptr);
+    fwrite(&fileheader->offset, 4, 1, bmp_target_ptr);
+
+    /* info header */
+    fwrite(infoheader, sizeof(INFOHEADER), 1, bmp_target_ptr);
+
+    /* color palette */
+    fwrite(colourindex, sizeof(COLOURINDEX), BMP_COLOUR_INDEX_LENGTH, bmp_target_ptr);
+
+    fseek(bmp_target_ptr, fileheader->offset, SEEK_SET);
+
+    /**
+     * Customize with expected height of image
+     *
+     * @todo
+     * modify height of generated image
+     */
+//    infoheader.height = BMP_GENERATED_HEIGHT;
+//    infoheader.imagesize = (u_int32_t) (infoheader.width * infoheader.height);
+//    printf("width: %d\nheight: %d\nimagesize: %d\n", infoheader.width, infoheader.height, infoheader.imagesize);
+
+    /**
+     * Write image data
+     */
+    fwrite(pixel_image, 1, infoheader->imagesize, bmp_target_ptr);
+
+    fclose(bmp_target_ptr);
+
+}
 
 /**
  * reverse order tiap n-pixel (max sampling 255 pixel)

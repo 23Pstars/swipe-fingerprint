@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "correlation_algorithm_2d.h"
+#include "corr_2d.h"
 
 /* Sum of Absolute Differences */
 int SAD_2d(unsigned char **source, unsigned char **target, int h_shift, int w_shift) {
