@@ -7,10 +7,8 @@
 #define     BMP_REVERSED_SOURCE     "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/REVERSED_SOURCE_BMP.bmp"
 
 #define     BMP_INFO_BIT                8
-#define     BMP_COLOUR_INDEX_LENGTH     256
+#define     BMP_COLOUR_INDEX_LENGTH     128
 #define     BMP_GENERATED_HEIGHT        400
-//#define     BMP_SOURCE_WIDTH            128
-//#define     BMP_SOURCE_HEIGHT           4000
 
 /**
  * tinggi (h_size) tiap block

@@ -38,14 +38,13 @@ int main() {
     /**
      * generated image size
      */
-//    u_int32_t __image_size_generated = (u_int16_t) (BMP_GENERATED_HEIGHT * infoheader.width);
-    u_int32_t __image_size_generated = infoheader.imagesize;
+    u_int32_t __image_size_generated = (u_int32_t) (infoheader.width * BMP_GENERATED_HEIGHT);
 
     /**
      * buffer
      */
     u_int8_t *pixel_image = malloc(sizeof(u_int8_t) * infoheader.imagesize),
-            *pixel_image_reversed = malloc(sizeof(u_int8_t) * infoheader.imagesize),
+//            *pixel_image_reversed = malloc(sizeof(u_int8_t) * infoheader.imagesize),
             *pixel_image_generate = malloc(sizeof(u_int8_t) * __image_size_generated);
 
     /**
@@ -54,22 +53,33 @@ int main() {
     read_bmp_pixel_image(pixel_image, infoheader.imagesize, fileheader.offset);
 
     /**
-     * @todo
-     * isi dengan warna putih sementara, agar terlihat
-     * block yang sudah terisi dan yang belum terisi
+     * isi block sisanya dengan hitam
      */
-    memset(pixel_image_generate, 255, __image_size_generated);
+    memset(pixel_image_generate, 0, __image_size_generated);
 
     /**
      * perlu dilakukan reverse order
      * karena kebetulan gambar output terbalik tiap 8 pixel-row
      */
-    block_reverse(pixel_image, pixel_image_reversed, infoheader.height, infoheader.width, SAMPLING_SIZE);
+//    block_reverse(pixel_image, pixel_image_reversed, infoheader.height, infoheader.width, SAMPLING_SIZE);
 
     /**
      * mulai rekonstruksi
      */
     reconstruct(pixel_image, pixel_image_generate, infoheader.height, infoheader.width);
+
+    /**
+     * Customize with expected height of image
+     */
+    infoheader.height = BMP_GENERATED_HEIGHT;
+    infoheader.imagesize = __image_size_generated;
+
+    /**
+     * fileheader: 14 bytes
+     * infoheader: 40 bytes
+     * colourindex: 128 * 8 bytes
+     */
+    fileheader.size = 54 + (8 * BMP_COLOUR_INDEX_LENGTH) + infoheader.imagesize;
 
     /**
      * tulis kembali file BMP

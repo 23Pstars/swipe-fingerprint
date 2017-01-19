@@ -121,34 +121,16 @@ void write_bmp(FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX *colo
         printf("Failed to open %s", BMP_TARGET);
     }
 
-    /* file header */
     fwrite(&fileheader->type, 2, 1, bmp_target_ptr);
     fwrite(&fileheader->size, 4, 1, bmp_target_ptr);
     fwrite(&fileheader->reserved1, 2, 1, bmp_target_ptr);
     fwrite(&fileheader->reserved2, 2, 1, bmp_target_ptr);
     fwrite(&fileheader->offset, 4, 1, bmp_target_ptr);
 
-    /* info header */
     fwrite(infoheader, sizeof(INFOHEADER), 1, bmp_target_ptr);
-
-    /* color palette */
     fwrite(colourindex, sizeof(COLOURINDEX), BMP_COLOUR_INDEX_LENGTH, bmp_target_ptr);
 
     fseek(bmp_target_ptr, fileheader->offset, SEEK_SET);
-
-    /**
-     * Customize with expected height of image
-     *
-     * @todo
-     * modify height of generated image
-     */
-//    infoheader.height = BMP_GENERATED_HEIGHT;
-//    infoheader.imagesize = (u_int32_t) (infoheader.width * infoheader.height);
-//    printf("width: %d\nheight: %d\nimagesize: %d\n", infoheader.width, infoheader.height, infoheader.imagesize);
-
-    /**
-     * Write image data
-     */
     fwrite(pixel_image, 1, infoheader->imagesize, bmp_target_ptr);
 
     fclose(bmp_target_ptr);
@@ -168,13 +150,13 @@ void block_reverse(u_int8_t *source, u_int8_t *target, int32_t height, int32_t w
 
     u_int16_t i, j, k, rate = (u_int16_t) height / sampling_size;
 
-    /* segments */
+    /// segments
     for (i = 0; i < rate; i++)
 
-        /* width in sampling (block) */
+        /// width in sampling (block)
         for (j = 0; j < sampling_size; j++)
 
-            /* element (column) of rows */
+            /// element (column) of rows
             for (k = 0; k < width; k++)
 
                 target[(i * sampling_size * width) + (j * width) + k] = source[

@@ -41,7 +41,7 @@ void reconstruct(u_int8_t *pixel_image, u_int8_t *pixel_image_generate, int32_t 
             __min_w_diff,               /// jarak horizontal dengan perbedaan terkecil
 
             __block_size = (u_int16_t) (SAMPLING_SIZE * width),         /// jumlah byte dalam 1 block
-            __rate = (u_int16_t) (__image_size / __block_size);         /// jumlah keseluruhan block
+            __rate = (u_int16_t) (__image_size / __block_size);         /// jumlah keseluruhan block (step)
 
     int16_t __rate_h_offset = SAMPLING_SIZE;        /// offset h setelah block di-merge
 
@@ -210,7 +210,7 @@ void reconstruct(u_int8_t *pixel_image, u_int8_t *pixel_image_generate, int32_t 
          * jika __rate_h_offset sudah melebihi tinggi maksimum
          * generated BMP yang telah ditentukan, hentikan merge
          */
-//        if (__rate_h_offset + abs(__min_h_diff) > BMP_GENERATED_HEIGHT) break;
+        if (__rate_h_offset + abs(__min_h_diff) > BMP_GENERATED_HEIGHT) break;
 
         /**
          * merge block sesuai shifting yang dihasilkan
@@ -224,7 +224,7 @@ void reconstruct(u_int8_t *pixel_image, u_int8_t *pixel_image_generate, int32_t 
         __rate_h_offset += abs(__min_h_diff);
 
 
-        printf("\nBlock-%d %d:%d = %d, offset: %d\n", (i + 1), __min_h_diff, __min_w_diff, __min_diff, __rate_h_offset);
+//        printf("\nBlock-%d %d:%d = %d, offset: %d\n", (i + 1), __min_h_diff, __min_w_diff, __min_diff, __rate_h_offset);
 //        printf("\nBlock-%d %d:%d = %f, offset: %d\n", i, __min_h_diff, __min_w_diff, __min_diff_f, __rate_h_offset);
 
         /**
