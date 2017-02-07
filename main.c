@@ -62,6 +62,7 @@ int main() {
      * karena kebetulan gambar output terbalik tiap 8 pixel-row
      */
 //    block_reverse(pixel_image, pixel_image_reversed, infoheader.height, infoheader.width, SAMPLING_SIZE);
+//    write_bmp(&fileheader, &infoheader, colourindex, pixel_image_reversed);
 
     /**
      * mulai rekonstruksi
@@ -79,7 +80,7 @@ int main() {
      * infoheader: 40 bytes
      * colourindex: 128 * 8 bytes
      */
-    fileheader.size = 54 + (8 * BMP_COLOUR_INDEX_LENGTH) + infoheader.imagesize;
+    fileheader.size = 54 + sizeof(colourindex) + __image_size_generated;
 
     /**
      * tulis kembali file BMP
