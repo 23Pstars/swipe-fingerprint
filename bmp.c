@@ -1,5 +1,6 @@
 #include <stdlib.h>
 #include <printf.h>
+#include <memory.h>
 
 #include "bmp.h"
 #include "config.h"
@@ -9,7 +10,7 @@
  *
  * @return bmp_ptr
  */
-FILE *open_bmp() {
+FILE *open_bmp_file(char *file_path, char *mode) {
 
     /**
      * buffer BMP
@@ -19,8 +20,8 @@ FILE *open_bmp() {
     /**
      * cek apakah berhasil akses file BMP
      */
-    if ((bmp_ptr = fopen(BMP_SOURCE, "r")) == NULL) {
-        printf("Failed to open %s\n", BMP_SOURCE);
+    if ((bmp_ptr = fopen(file_path, mode)) == NULL) {
+        printf("Failed to open %s\n", file_path);
         exit(-1);
     }
 
@@ -28,16 +29,33 @@ FILE *open_bmp() {
 }
 
 /**
- * baca file BMP
+ * load file BMP
  *
+ * @param bmpheader
+ */
+void load_bmp(BMPHEADER *bmpheader, unsigned char *pixel_image) {
+
+    /**
+     * baca header
+     */
+    read_bmp_header(&bmpheader->fileheader, &bmpheader->infoheader, bmpheader->colourindex);
+
+    /**
+     * baca data pixel image
+     */
+    read_bmp_pixel_image(pixel_image, bmpheader->infoheader.imagesize, bmpheader->fileheader.offset);
+
+}
+
+/**
+ * baca file header
  * @param fileheader
  * @param infoheader
  * @param colourindex
- * @param pixel_image
  */
 void read_bmp_header(FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX *colourindex) {
 
-    FILE *bmp_source_ptr = open_bmp();
+    FILE *bmp_source_ptr = open_bmp_file(BMP_INPUT, "r");
 
     /**
      * baca file header
@@ -88,9 +106,9 @@ void read_bmp_header(FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX
  * @param imagesize
  * @param offset
  */
-void read_bmp_pixel_image(u_int8_t *pixel_image, u_int32_t imagesize, u_int32_t offset) {
+void read_bmp_pixel_image(unsigned char *pixel_image, unsigned int imagesize, unsigned int offset) {
 
-    FILE *bmp_source_ptr = open_bmp();
+    FILE *bmp_source_ptr = open_bmp_file(BMP_INPUT, "r");
 
     /**
      * geser ke data utama
@@ -106,6 +124,34 @@ void read_bmp_pixel_image(u_int8_t *pixel_image, u_int32_t imagesize, u_int32_t 
 }
 
 /**
+ * save image to output
+ *
+ * @param bmpheader
+ * @param pixel_image
+ */
+void save_bmp(BMPHEADER *bmpheader, unsigned char *pixel_image) {
+
+    /**
+     * modif header sesuai ukuran output
+     */
+    bmpheader->infoheader.height = BMP_OUTPUT_HEIGHT;
+    bmpheader->infoheader.imagesize = BMP_OUTPUT_SIZE;
+
+    /**
+     * fileheader: 14 bytes
+     * infoheader: 40 bytes
+     * colourindex: 128 * 8 bytes
+     * Total: 1078
+     */
+    bmpheader->fileheader.size = (unsigned int) (1078 + BMP_OUTPUT_SIZE);
+
+    /**
+     * tulis data pixel
+     */
+    write_bmp(&bmpheader->fileheader, &bmpheader->infoheader, bmpheader->colourindex, pixel_image);
+}
+
+/**
  * tulis file BMP
  *
  * @param fileheader
@@ -113,13 +159,9 @@ void read_bmp_pixel_image(u_int8_t *pixel_image, u_int32_t imagesize, u_int32_t 
  * @param colourindex
  * @param pixel_image
  */
-void write_bmp(FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX *colourindex, u_int8_t *pixel_image) {
+void write_bmp(FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX *colourindex, unsigned char *pixel_image) {
 
-    FILE *bmp_target_ptr;
-
-    if ((bmp_target_ptr = fopen(BMP_TARGET, "wb")) == NULL) {
-        printf("Failed to open %s", BMP_TARGET);
-    }
+    FILE *bmp_target_ptr = open_bmp_file(BMP_OUTPUT, "wb");
 
     fwrite(&fileheader->type, 2, 1, bmp_target_ptr);
     fwrite(&fileheader->size, 4, 1, bmp_target_ptr);
@@ -138,33 +180,6 @@ void write_bmp(FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX *colo
 }
 
 /**
- * reverse order tiap n-pixel (max sampling 255 pixel)
- *
- * @param source
- * @param target
- * @param height
- * @param width
- * @param sampling_size
- */
-void block_reverse(u_int8_t *source, u_int8_t *target, int32_t height, int32_t width, u_int8_t sampling_size) {
-
-    u_int16_t i, j, k, rate = (u_int16_t) height / sampling_size;
-
-    /// segments
-    for (i = 0; i < rate; i++)
-
-        /// width in sampling (block)
-        for (j = 0; j < sampling_size; j++)
-
-            /// element (column) of rows
-            for (k = 0; k < width; k++)
-
-                target[(i * sampling_size * width) + (j * width) + k] = source[
-                        ((height - (sampling_size * (i + 1))) * width) + (j * width) + k];
-
-}
-
-/**
  * merge suatu block (source) kedalam suatu data (target)
  *
  * @param source, block yang akan di-merge
@@ -176,38 +191,48 @@ void block_reverse(u_int8_t *source, u_int8_t *target, int32_t height, int32_t w
  * @param w_shift, pergeseran (horizontal) source dari target
  * @param default_w_value, default value untuk pergeseran horizontal
  */
-void block_merge(u_int8_t *source, u_int8_t *target, u_int8_t height, u_int8_t width, int16_t offset, int16_t h_shift,
-                 int16_t w_shift, u_int8_t default_w_value) {
+void block_merge(unsigned char *pixel_image_generate, unsigned char *block_buffer,
+                 short iterate_offset, short height_shift, short width_shift, unsigned char default_w_value) {
 
-    u_int16_t i, j;
+    unsigned short i, j;
 
 //    printf("\n\noffset: %d, h_shift: %d, w_shift: %d\n", offset, h_shift, w_shift);
 
     /**
      * looping untuk setiap row setinggi height dari source
      */
-    for (i = 0; i < height; i++) {
+    for (i = 0; i < BLOCK_HEIGHT; i++) {
 
         /**
          * looping untuk setiap cell sepanjang width dari source
          */
-        for (j = 0; j < width; j++) {
+        for (j = 0; j < BMP_INPUT_WIDTH; j++) {
 
-            if (j + w_shift < 0) {                          /** geser kiri */
+            /**
+             * geser kiri
+             */
+            if (j + width_shift < 0) {
 //                printf("h;%d w;%d %d:%d\t\t", i, j, *(target + ((offset + i + h_shift + 1) * width) + j + w_shift),
 //                       default_w_value);
 //                target[((offset + i + h_shift + 1) * width) + j + w_shift] = default_w_value;
-                *(target + ((offset + i + h_shift + 1) * width) + j + w_shift) = default_w_value;
-            } else if (j + w_shift > width - 1) {           /** geser kanan */
+                *(pixel_image_generate + ((iterate_offset + i + height_shift + 1) * BMP_INPUT_WIDTH) + j +
+                  width_shift) = default_w_value;
+
+                /**
+                 * geser kanan
+                 */
+            } else if (j + width_shift > BMP_INPUT_WIDTH - 1) {
 //                printf("h;%d w;%d %d:%d\t\t", i, j, *(target + ((offset + i + h_shift - 1) * width) + j + w_shift),
 //                       default_w_value);
 //                target[((offset + i + h_shift - 1) * width) + j + w_shift] = default_w_value;
-                *(target + ((offset + i + h_shift - 1) * width) + j + w_shift) = default_w_value;
+                *(pixel_image_generate + ((iterate_offset + i + height_shift - 1) * BMP_INPUT_WIDTH) + j +
+                  width_shift) = default_w_value;
             } else {
 //                printf("h:%d w:%d %d:%d\t\t", i, j,
 //                       *(target + ((offset + i + h_shift) * width) + j + w_shift), *(source + (i * width) + j));
 //                target[((offset + i + h_shift) * width) + j + w_shift] = source[(i * width) + j];
-                *(target + ((offset + i + h_shift) * width) + j + w_shift) = *(source + (i * width) + j);
+                *(pixel_image_generate + ((iterate_offset + i + height_shift) * BMP_INPUT_WIDTH) + j + width_shift) = *(
+                        block_buffer + (i * BMP_INPUT_WIDTH) + j);
             }
         }
 //        printf("\n");
@@ -216,30 +241,47 @@ void block_merge(u_int8_t *source, u_int8_t *target, u_int8_t height, u_int8_t w
 }
 
 /**
- * potong array menjadi bagian yang diinginkan
+ * potong array menjadi bagian dengan ukuran BLOCK_SIZE
  *
- * @param source, data utuh
- * @param height, tinggi total data utuh
- * @param width, lebar total data utuh
- * @param h_size, tinggi yang diinginkan untuk dipotong
- * @param w_size, lebar yang diinginkan untuk dipotong
- * @param h_offset, geser vertical
- * @param w_offset, geser horizontal
- * @return
+ * @param pixel_image, data sumber dari pixel gambar
+ * @param block_buffer, block hasil slice
+ * @param height_offset, offset untuk tinggi pixel gambar
+ * @param block_size, ukuran block yang akan dipotong (custom)
  */
-u_int8_t *
-block_slice(u_int8_t *source, int32_t height, int32_t width, u_int16_t h_size, u_int16_t w_size, u_int16_t h_offset,
-            u_int16_t w_offset) {
+void block_slice(unsigned char *pixel_image, unsigned char *block_buffer,
+                 unsigned short height_offset, unsigned short block_size) {
+    memcpy(block_buffer, pixel_image + (height_offset * BMP_INPUT_WIDTH), block_size);
+}
 
-    u_int16_t i, j;
-    u_int8_t *block = malloc(sizeof(u_int8_t) * h_size * w_size);
+/**
+ * reverse tiap row untuk masing-masing bagian block
+ *
+ * @param pixel_image
+ * @param pixel_image_reversed
+ */
+void block_reverse(unsigned char *pixel_image, unsigned char *pixel_image_reversed) {
 
-    for (i = 0; i < h_size; i++)
+    unsigned int i;
+    unsigned short j;
 
-        for (j = 0; j < w_size; j++)
+    /**
+     * iterasi per-block
+     */
+    for (i = 0; i < BMP_INPUT_SIZE; i += BLOCK_SIZE) {
 
-            block[(i * w_size) + j] = (u_int8_t) (h_offset + i > height - 1 || w_offset + j > width - 1 ? 0 : source[
-                    ((i + h_offset) * width) + j + w_offset]);
+        /**
+         * iterasi per-row untuk setiap block
+         */
+        for (j = 0; j < BLOCK_SIZE; j += BMP_INPUT_WIDTH) {
 
-    return block;
+            /**
+             * lakukan copy per-row
+             */
+            memcpy(pixel_image_reversed + i + j, pixel_image + i + (BLOCK_SIZE - BMP_INPUT_WIDTH - j), BMP_INPUT_WIDTH);
+
+        }
+
+    }
+
+
 }

@@ -17,9 +17,9 @@ int main() {
 
     read_bmp_header(&fh, &ih, ci);
 
-    printf("fh: %zu\n", sizeof(fh));
+    printf("\nsize\nfh: %zu\n", sizeof(fh));
     printf("ih: %zu\n", sizeof(ih));
-    printf("ci: %zu\n\n", sizeof(ci));
+    printf("ci: %zu\n\n\n", sizeof(ci));
 
     printf("fh offset: %d\n", fh.offset);
     printf("ih width: %d\n", ih.width);
@@ -27,6 +27,6 @@ int main() {
     printf("if imagesize: %d\n\n", ih.imagesize);
 
     printf("fh size: %d\n", fh.size);
-    printf("calculated size: %d", (int) (14 + 40 + (128 * sizeof(COLOURINDEX)) + (ih.width * ih.height)));
+    printf("calculated size: %d\n", (int) (14 + 40 + (128 * sizeof(COLOURINDEX)) + (ih.width * ih.height)));
 
 }

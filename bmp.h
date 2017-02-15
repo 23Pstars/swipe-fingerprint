@@ -1,47 +1,60 @@
 /**
- * char (int8_t)        --> 1 byte
- * short (int16_t)      --> 2 bytes
- * int (int32_t)        --> 4 bytes
- * long (int64_t)       --> 8 bytes
+ * char     --> 1 byte
+ * short    --> 2 bytes
+ * int      --> 4 bytes
+ * long     --> 8 bytes
  *
  * kadang berlaku juga padding
  * - http://www.c-faq.com/struct/align.html
  */
 
+#define     BMP_INFO_BIT                8
+#define     BMP_COLOUR_INDEX_LENGTH     128
+
 typedef struct {
-    u_int16_t type;                             /* identifikasi jenis gambar */
-    u_int32_t size;                             /* file size in bytes */
-    u_int16_t reserved1;                        /* tidak digunakan */
-    u_int16_t reserved2;                        /* tidak digunakan */
-    u_int32_t offset;                           /* offset ke data gambar */
+    unsigned short type;        /** identifikasi jenis gambar */
+    unsigned int size;          /** file size in bytes */
+    unsigned short reserved1;   /** tidak digunakan */
+    unsigned short reserved2;   /** tidak digunakan */
+    unsigned int offset;        /** offset ke data gambar */
 } FILEHEADER;
 
 typedef struct {
-    u_int32_t size;                             /* ukuran infoheader */
-    int32_t width, height;                      /* lebar dan tinggi */
-    u_int16_t planes;                           /* jumlah color planes */
-    u_int16_t bits;                             /* bits tiap pixel */
-    u_int32_t compression;                      /* tipe kompresi */
-    u_int32_t imagesize;                        /* ukuran data gambar */
-    int32_t xresolution, yresolution;           /* pizel per meter */
-    u_int32_t ncolours;                        /* jumlah warna */
-    u_int32_t importantcolours;                /* warna penting */
+    unsigned int size;              /** ukuran infoheader */
+    int width, height;              /** lebar dan tinggi */
+    unsigned short planes;          /** jumlah color planes */
+    unsigned short bits;            /** bits tiap pixel */
+    unsigned int compression;       /** tipe kompresi */
+    unsigned int imagesize;         /** ukuran data gambar */
+    int xresolution, yresolution;   /** pizel per meter */
+    unsigned int ncolours;          /** jumlah warna */
+    unsigned int importantcolours;  /** warna penting */
 } INFOHEADER;
 
 typedef struct {
-    u_int16_t r, g, b, junk;                    /* terkumpul dalam 1 byte */
+    unsigned short r, g, b, junk;                    /* terkumpul dalam 1 byte */
 } COLOURINDEX;
 
-FILE *open_bmp();
+typedef struct {
+    FILEHEADER fileheader;
+    INFOHEADER infoheader;
+    COLOURINDEX colourindex[BMP_COLOUR_INDEX_LENGTH];
+} BMPHEADER;
+
+FILE *open_bmp_file(char *, char *);
+
+void load_bmp(BMPHEADER *, unsigned char *);
 
 void read_bmp_header(FILEHEADER *, INFOHEADER *, COLOURINDEX *);
 
-void read_bmp_pixel_image(u_int8_t *, u_int32_t, u_int32_t);
+void read_bmp_pixel_image(unsigned char *, unsigned int, unsigned int);
 
-void write_bmp(FILEHEADER *, INFOHEADER *, COLOURINDEX *, u_int8_t *);
+void save_bmp(BMPHEADER *, unsigned char *);
 
-void block_reverse(u_int8_t *, u_int8_t *, int32_t, int32_t, uint8_t);
+void write_bmp(FILEHEADER *, INFOHEADER *, COLOURINDEX *, unsigned char *);
 
-void block_merge(u_int8_t *, u_int8_t *, u_int8_t, u_int8_t, int16_t, int16_t, int16_t, u_int8_t);
+void block_merge(unsigned char *, unsigned char *, short, short, short, unsigned char);
 
-u_int8_t *block_slice(u_int8_t *, int32_t, int32_t, u_int16_t, u_int16_t, u_int16_t, u_int16_t);
+void block_slice(unsigned char *, unsigned char *, unsigned short, unsigned short);
+
+void block_reverse(unsigned char *, unsigned char *);

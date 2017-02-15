@@ -1,19 +1,21 @@
-void reconstruct(u_int8_t *, u_int8_t *, int32_t, int32_t);
+void reconstruct(unsigned char *, unsigned char *);
 
-u_int32_t SAD(u_int8_t *, u_int8_t *, u_int16_t, u_int16_t, int8_t, int8_t);
+void calculate_xy(unsigned char *, unsigned char *, short *, short *);
 
-u_int32_t SSD(u_int8_t *, u_int8_t *, u_int16_t, u_int16_t, int8_t, int8_t);
+unsigned int SAD(unsigned char *, unsigned char *, unsigned short, unsigned short, char, char);
 
-float NCC(u_int8_t *, u_int8_t *, u_int16_t, u_int16_t, int8_t, int8_t);
+unsigned int SSD(unsigned char *, unsigned char *, unsigned short, unsigned short, char, char);
 
-float ZSAD(u_int8_t *, u_int8_t *, u_int16_t, u_int16_t, int8_t, int8_t);
+float NCC(unsigned char *, unsigned char *, unsigned short, unsigned short, char, char);
 
-float ZSSD(u_int8_t *, u_int8_t *, u_int16_t, u_int16_t, int8_t, int8_t);
+float ZSAD(unsigned char *, unsigned char *, unsigned short, unsigned short, char, char);
 
-float ZNCC(u_int8_t *, u_int8_t *, u_int16_t, u_int16_t, int8_t, int8_t);
+float ZSSD(unsigned char *, unsigned char *, unsigned short, unsigned short, char, char);
 
-float mean(u_int8_t *, u_int16_t, uint16_t);
+float ZNCC(unsigned char *, unsigned char *, unsigned short, unsigned short, char, char);
 
-float sum_squared(u_int8_t *, u_int16_t, uint16_t);
+float mean(unsigned char *, unsigned short, unsigned short);
 
-float sum_mean_squared(u_int8_t *, u_int16_t, uint16_t);
+float sum_squared(unsigned char *, unsigned short, unsigned short);
+
+float sum_mean_squared(unsigned char *, unsigned short, unsigned short);
