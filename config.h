@@ -29,8 +29,8 @@
  * offset tiap pencocokan apakah geser kiri,
  * kanan, atas, atau bawah
  */
-#define     HEIGHT_RANGE_OFFSET         4
-#define     WIDTH_RANGE_OFFSET          0
+#define     HEIGHT_RANGE_OFFSET         7
+#define     WIDTH_RANGE_OFFSET          8
 
 /**
  * jika treshold sudah terpenuhi program tidak perlu

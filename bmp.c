@@ -182,60 +182,76 @@ void write_bmp(FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX *colo
 /**
  * merge suatu block (source) kedalam suatu data (target)
  *
- * @param source, block yang akan di-merge
- * @param target, data utuh tujuan merge
- * @param height, tinggi dari block yang akan di-merge (source)
- * @param width, lebar dari block yang akan di-merge (source)
- * @param offset, offset untuk tiap block target didalam target
- * @param h_shift, pergeseran (vertical) source dari target
- * @param w_shift, pergeseran (horizontal) source dari target
- * @param default_w_value, default value untuk pergeseran horizontal
+ * @param pixel_image_generate, block tujuan merge
+ * @param block_buffer, buffer data yang akan di-merge
+ * @param block_height, tinggi dari block yang akan di-merge (source)
+ * @param block_width, lebar dari block yang akan di-merge (source)
+ * @param iterate_offset, offset untuk tiap block target didalam target
+ * @param height_shift, pergeseran (vertical) source dari target
+ * @param width_shift, pergeseran (horizontal) source dari target
+ * @param default_overlap_value, default value untuk pergeseran horizontal
  */
-void block_merge(unsigned char *pixel_image_generate, unsigned char *block_buffer,
-                 short iterate_offset, short height_shift, short width_shift, unsigned char default_w_value) {
+void block_merge(unsigned char *pixel_image_generate, unsigned char *block_buffer, unsigned char block_height,
+                 unsigned char block_width, short iterate_offset, short height_shift, short width_shift,
+                 unsigned char default_overlap_value) {
 
-    unsigned short i, j;
+    unsigned short i;
 
-//    printf("\n\noffset: %d, h_shift: %d, w_shift: %d\n", offset, h_shift, w_shift);
+    memset(pixel_image_generate + (iterate_offset * block_width), default_overlap_value,
+           (height_shift + block_height) * block_width);
 
-    /**
-     * looping untuk setiap row setinggi height dari source
-     */
-    for (i = 0; i < BLOCK_HEIGHT; i++) {
+    if (height_shift >= 0) {
 
-        /**
-         * looping untuk setiap cell sepanjang width dari source
-         */
-        for (j = 0; j < BMP_INPUT_WIDTH; j++) {
+        if (width_shift >= 0) {
 
             /**
-             * geser kiri
+             * height_shift +
+             * width_shift +
              */
-            if (j + width_shift < 0) {
-//                printf("h;%d w;%d %d:%d\t\t", i, j, *(target + ((offset + i + h_shift + 1) * width) + j + w_shift),
-//                       default_w_value);
-//                target[((offset + i + h_shift + 1) * width) + j + w_shift] = default_w_value;
-                *(pixel_image_generate + ((iterate_offset + i + height_shift + 1) * BMP_INPUT_WIDTH) + j +
-                  width_shift) = default_w_value;
+            for (i = 0; i < block_height; i++) {
+                memcpy(pixel_image_generate + ((i + iterate_offset + height_shift) * block_width) + width_shift,
+                       block_buffer + (i * block_width),
+                       block_width - width_shift);
+            }
 
-                /**
-                 * geser kanan
-                 */
-            } else if (j + width_shift > BMP_INPUT_WIDTH - 1) {
-//                printf("h;%d w;%d %d:%d\t\t", i, j, *(target + ((offset + i + h_shift - 1) * width) + j + w_shift),
-//                       default_w_value);
-//                target[((offset + i + h_shift - 1) * width) + j + w_shift] = default_w_value;
-                *(pixel_image_generate + ((iterate_offset + i + height_shift - 1) * BMP_INPUT_WIDTH) + j +
-                  width_shift) = default_w_value;
-            } else {
-//                printf("h:%d w:%d %d:%d\t\t", i, j,
-//                       *(target + ((offset + i + h_shift) * width) + j + w_shift), *(source + (i * width) + j));
-//                target[((offset + i + h_shift) * width) + j + w_shift] = source[(i * width) + j];
-                *(pixel_image_generate + ((iterate_offset + i + height_shift) * BMP_INPUT_WIDTH) + j + width_shift) = *(
-                        block_buffer + (i * BMP_INPUT_WIDTH) + j);
+        } else {
+
+            /**
+             * height_shift +
+             * width_shift -
+             */
+            for (i = 0; i < block_height; i++) {
+                memcpy(pixel_image_generate + ((i + iterate_offset + height_shift) * block_width),
+                       block_buffer + (i * block_width) - width_shift,
+                       block_width + width_shift);
             }
         }
-//        printf("\n");
+    } else {
+
+        if (width_shift >= 0) {
+
+            /**
+             * height_shift -
+             * width_shift +
+             */
+            for (i = 0; i < block_height + height_shift; i++) {
+                memcpy(pixel_image_generate + ((i + iterate_offset) * block_width) + width_shift,
+                       block_buffer + ((i - height_shift) * block_width),
+                       block_width - width_shift);
+            }
+
+        } else {
+
+            /**
+             * height_shift -
+             * width_shift -
+             */
+            for (i = 0; i < block_height + height_shift; i++) {
+                memcpy(pixel_image_generate + ((i + iterate_offset) * block_width),
+                       block_buffer + ((i - height_shift) * block_width) - width_shift,
+                       block_width + width_shift);
+            }
+        }
     }
 
 }

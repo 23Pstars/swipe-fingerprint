@@ -26,9 +26,9 @@ int main() {
 
     block_reverse(pixel_image, pixel_image_reversed);
 
-    reconstruct(pixel_image_reversed, pixel_image_generate);
+    reconstruct(pixel_image_reversed, pixel_image_reversed);
 
-    save_bmp(&bmpheader, pixel_image_generate);
+    save_bmp(&bmpheader, pixel_image_reversed);
 
     free(pixel_image);
     free(pixel_image_reversed);
