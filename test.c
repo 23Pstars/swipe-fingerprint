@@ -4,46 +4,159 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-
+#include <stdbool.h>
+#include <memory.h>
 #include "corr.h"
+#include "bmp.h"
 
-#define n 4
+#define     BLOCK_A         "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/block/block-8.bmp"
+#define     BLOCK_B         "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/block/block-0.bmp"
+#define     BLOCK_HEIGHT    8
+#define     BLOCK_WIDTH     128
+#define     BLOCK_SIZE      BLOCK_HEIGHT * BLOCK_WIDTH
+#define     VECTOR_WIDTH    128
+
+#define     n               4
+
 
 int main() {
 
-    unsigned char a[n * n] = {
-            1, 1, 1, 1,
-            2, 2, 2, 2,
-            3, 3, 3, 3,
-            4, 4, 4, 4
+//    FILE *bmp_ptr;
+//    unsigned int offset;
+//    unsigned char *block_a = calloc(BLOCK_SIZE, sizeof(unsigned char)),
+//            *block_b = calloc(BLOCK_SIZE, sizeof(unsigned char)),
+//            *vector_a = calloc(VECTOR_WIDTH, sizeof(unsigned char)),
+//            *vector_b = calloc(VECTOR_WIDTH, sizeof(unsigned char));
+//
+//    bmp_ptr = open_bmp_file(BLOCK_A, "r");
+//    fseek(bmp_ptr, 1078, SEEK_SET);
+//    fread(block_a, 1, BLOCK_SIZE, bmp_ptr);
+//    fread(vector_a, 1, VECTOR_WIDTH, bmp_ptr);
+
+//    fseek(bmp_ptr, 1078, SEEK_SET);
+//    memset(block_b, 0, BLOCK_WIDTH);
+//    fread(block_b + BLOCK_WIDTH, 1, BLOCK_SIZE - BLOCK_WIDTH, bmp_ptr);
+
+
+//    bmp_ptr = open_bmp_file(BLOCK_B, "r");
+//    fseek(bmp_ptr, 1078, SEEK_SET);
+//    fread(block_b, 1, BLOCK_SIZE, bmp_ptr);
+//    fread(vector_b, 1, VECTOR_WIDTH, bmp_ptr);
+
+//    for (unsigned short h = 0; h < BLOCK_SIZE; h++)
+//        printf("%d\t%s", *(block_a + h), ((h + 1) % BLOCK_WIDTH == 0) ? "\n" : "");
+//
+//    printf("\n");
+//
+//    for (unsigned short h = 0; h < BLOCK_SIZE; h++)
+//        printf("%d\t%s", *(block_b + h), ((h + 1) % BLOCK_WIDTH == 0) ? "\n" : "");
+//
+//    printf("\n");
+//
+//    unsigned int diff = 0xffffffff, diff_temp;
+//
+//    char h_range = 7, w_range = 8, h_min = -h_range, w_min = -w_range;
+//    for (char hs = -h_range; hs <= h_range; hs++)
+//        for (char ws = -w_range; ws <= w_range; ws++) {
+//            diff_temp = diff_xy(block_a, block_b, BLOCK_HEIGHT, BLOCK_WIDTH, hs, ws, false);
+//            printf("SAD(hs %d, ws %d): %d\n", hs, ws, diff_temp);
+//            if (diff_temp < diff) {
+//                diff = diff_temp;
+//                h_min = hs;
+//                w_min = ws;
+//            }
+//        }
+
+//    char w_range = 1, w_min = -w_range;
+//    for (char ws = -w_range; ws <= w_range; ws++) {
+//        diff_temp = diff_xy_vector(block_a, block_b, VECTOR_WIDTH, ws, false);
+//        printf("SAD(ws %d): %d\n", ws, diff_temp);
+//        if (diff_temp < diff) {
+//            diff = diff_temp;
+//            w_min = ws;
+//        }
+//    }
+//
+//    printf("w_min: %d\n", w_min);
+
+//    diff_temp = diff_xy_vector(vector_a, vector_b, VECTOR_WIDTH, 1, false);
+
+//    unsigned char a[n * n] = {
+//            1, 1, 1, 1,
+//            2, 2, 2, 2,
+//            3, 3, 3, 3,
+//            4, 4, 4, 4
+//    };
+//
+//    unsigned char b[n * n * n] = {
+//            5, 5, 5, 5,
+//            1, 1, 1, 1,
+//            2, 2, 2, 2,
+//            3, 3, 3, 3,
+//            4, 4, 4, 4,
+//            2, 2, 2, 2,
+//            3, 3, 3, 3,
+//            4, 4, 4, 4
+//    };
+
+//    unsigned char c[n * n] = {
+//            1, 1, 1, 1,
+//            2, 2, 2, 2,
+//            3, 3, 3, 3,
+//            4, 4, 4, 4
+//    };
+//
+//    unsigned char d[n * n] = {
+//            2, 2, 2, 2,
+//            3, 3, 3, 3,
+//            4, 4, 4, 4,
+//            5, 5, 5, 5
+//    };
+//
+
+    unsigned char e_size = n * n, ef_size = (unsigned char) (e_size * 2);
+
+    unsigned char e[n * n] = {
+            0, 1, 2, 3,
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+            12, 13, 14, 15
     };
 
-    unsigned char b[n * n * n] = {
-            5, 5, 5, 5,
-            1, 1, 1, 1,
-            2, 2, 2, 2,
-            3, 3, 3, 3,
-            4, 4, 4, 4,
-            2, 2, 2, 2,
-            3, 3, 3, 3,
-            4, 4, 4, 4
+    unsigned char f[n * n] = {
+            4, 5, 6, 7,
+            8, 9, 10, 11,
+            12, 13, 14, 15,
+            16, 17, 18, 19
     };
 
-    unsigned char c[n * n] = {
-            1, 1, 1, 1,
-            2, 2, 2, 2,
-            3, 3, 3, 3,
-            4, 4, 4, 4
-    };
+//    for (unsigned char i = 0; i < e_size; i++)
+//        printf("%d\t%s", *(e + i), ((i + 1) % n == 0 ? "\n" : ""));
+//
+//    printf("\n");
+//
+//
+//    unsigned int diff = 66585600, diff_temp;
+//    char h_min = -n, w_min = -n;
+//    for (char hs = -n + 1; hs < n; hs++)
+//        for (char ws = -n + 1; ws < n; ws++) {
+//            diff_temp = diff_xy(e, f, n, n, hs, ws, false);
+//            printf("SAD(hs %d, ws %d): %d\n", hs, ws, diff_temp);
+//            if (diff_temp < diff) {
+//                diff = diff_temp;
+//                h_min = hs;
+//                w_min = ws;
+//            }
+//        }
+//
+//    printf("h_min: %d, w_min: %d\n", h_min, w_min);
 
-    unsigned char d[n * n] = {
-            2, 2, 2, 2,
-            3, 3, 3, 3,
-            4, 4, 4, 4,
-            5, 5, 5, 5
-    };
+    unsigned char ef[ef_size];
+    memset(ef, 0, ef_size);
+    memcpy(ef, e, e_size);
+    block_merge(ef, f, n, n, 1, 0, 0, 99);
 
-    for (char i = -3; i <= 3; i++)
-        printf("SDA(%d): %d\n", i, SAD(a, b, n, n, i, 0));
+    for (unsigned char i = 0; i < ef_size; i++)
+        printf("%d\t%s", *(ef + i), ((i + 1) % n == 0 ? "\n" : ""));
 
 }

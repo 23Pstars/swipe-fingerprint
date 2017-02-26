@@ -7,7 +7,7 @@
 
 #include "bmp.h"
 
-#define BMP_SOURCE "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/GENERATED_BMP.bmp"
+#define BMP_SOURCE "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/block/block-0.bmp"
 
 int main() {
 
