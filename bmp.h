@@ -32,7 +32,7 @@ typedef struct {
 } INFOHEADER;
 
 typedef struct {
-    unsigned short r, g, b, junk;                    /* terkumpul dalam 1 byte */
+    unsigned short r, g, b, junk;    /** terkumpul dalam 1 byte */
 } COLOURINDEX;
 
 typedef struct {
