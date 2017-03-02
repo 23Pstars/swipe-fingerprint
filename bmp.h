@@ -53,7 +53,7 @@ void save_bmp(BMPHEADER *, unsigned char *);
 
 void write_bmp(FILEHEADER *, INFOHEADER *, COLOURINDEX *, unsigned char *);
 
-void block_merge(unsigned char *, unsigned char *, unsigned char, unsigned char, short, short, short, unsigned char);
+void block_merge(unsigned char *, unsigned char *, unsigned char, unsigned char, short, short, short);
 
 void block_slice(unsigned char *, unsigned char *, unsigned short, unsigned short);
 

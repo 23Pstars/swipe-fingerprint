@@ -189,15 +189,20 @@ void write_bmp(FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX *colo
  * @param iterate_offset, offset untuk tiap block target didalam target
  * @param height_shift, pergeseran (vertical) source dari target
  * @param width_shift, pergeseran (horizontal) source dari target
- * @param default_overlap_value, default value untuk pergeseran horizontal
  */
 void block_merge(unsigned char *pixel_image_generate, unsigned char *block_buffer, unsigned char block_height,
-                 unsigned char block_width, short iterate_offset, short height_shift, short width_shift,
-                 unsigned char default_overlap_value) {
+                 unsigned char block_width, short iterate_offset, short height_shift, short width_shift) {
 
+    /**
+     * variabel iterasi
+     */
     unsigned short i;
 
-    memset(pixel_image_generate + (iterate_offset * block_width), default_overlap_value,
+    /**
+     * isi block yang akan diisi dengan `default_overlap_value`
+     * untuk memudahkan identifikasi pergeseran dx dan dy
+     */
+    memset(pixel_image_generate + (iterate_offset * block_width), DEFAULT_OVERLAP_VALUE,
            (height_shift + block_height) * block_width);
 
     if (height_shift >= 0) {
@@ -299,5 +304,18 @@ void block_reverse(unsigned char *pixel_image, unsigned char *pixel_image_revers
 
     }
 
+
+}
+
+/**
+ * @TODO
+ * nilai mean dari suatu block
+ *
+ * @param block_buffer
+ * @param height_shift
+ * @param width_shift
+ * @return
+ */
+float block_mean(unsigned char *block_buffer, char height_shift, char width_shift) {
 
 }

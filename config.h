@@ -39,8 +39,14 @@
 #define     DIFF_THRESHOLD_MIN          0
 
 /**
- * perlu dibatasi differences maksimal antar block
- * karena bisa jadi block tersebut memang berurutan
- * (tidak overlapping)
+ * nilai default
  */
-#define     DIFF_THRESHOLD_MAX          0
+#define     DEFAULT_OVERLAP_VALUE       255
+#define     SUM_OVERLAP_INDEX           false
+
+/**
+ * 1. SAD
+ * 2. SSD
+ * 3. NCC
+ */
+#define     USE_ALGO                    1

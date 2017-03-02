@@ -9,8 +9,9 @@
 #include "corr.h"
 #include "bmp.h"
 
-#define     BLOCK_A         "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/block/block-8.bmp"
-#define     BLOCK_B         "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/block/block-0.bmp"
+#define     BLOCK_A         "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/block/block-0.bmp"
+#define     BLOCK_B         "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/block/block-8.bmp"
+#define     BLOCK_c         "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/block/block-16.bmp"
 #define     BLOCK_HEIGHT    8
 #define     BLOCK_WIDTH     128
 #define     BLOCK_SIZE      BLOCK_HEIGHT * BLOCK_WIDTH
@@ -23,16 +24,15 @@ int main() {
 
 //    FILE *bmp_ptr;
 //    unsigned int offset;
-//    unsigned char *block_a = calloc(BLOCK_SIZE, sizeof(unsigned char)),
-//            *block_b = calloc(BLOCK_SIZE, sizeof(unsigned char)),
-//            *vector_a = calloc(VECTOR_WIDTH, sizeof(unsigned char)),
-//            *vector_b = calloc(VECTOR_WIDTH, sizeof(unsigned char));
+    unsigned char *block_a = calloc(BLOCK_SIZE, sizeof(unsigned char)),
+            *block_b = calloc(BLOCK_SIZE, sizeof(unsigned char)),
+            *block_c = calloc(BLOCK_SIZE, sizeof(unsigned char)),
+            *block_abc = calloc(BLOCK_SIZE * 3, sizeof(unsigned char));
 //
 //    bmp_ptr = open_bmp_file(BLOCK_A, "r");
 //    fseek(bmp_ptr, 1078, SEEK_SET);
 //    fread(block_a, 1, BLOCK_SIZE, bmp_ptr);
-//    fread(vector_a, 1, VECTOR_WIDTH, bmp_ptr);
-
+//
 //    fseek(bmp_ptr, 1078, SEEK_SET);
 //    memset(block_b, 0, BLOCK_WIDTH);
 //    fread(block_b + BLOCK_WIDTH, 1, BLOCK_SIZE - BLOCK_WIDTH, bmp_ptr);
@@ -43,15 +43,29 @@ int main() {
 //    fread(block_b, 1, BLOCK_SIZE, bmp_ptr);
 //    fread(vector_b, 1, VECTOR_WIDTH, bmp_ptr);
 
-//    for (unsigned short h = 0; h < BLOCK_SIZE; h++)
-//        printf("%d\t%s", *(block_a + h), ((h + 1) % BLOCK_WIDTH == 0) ? "\n" : "");
-//
-//    printf("\n");
-//
-//    for (unsigned short h = 0; h < BLOCK_SIZE; h++)
-//        printf("%d\t%s", *(block_b + h), ((h + 1) % BLOCK_WIDTH == 0) ? "\n" : "");
-//
-//    printf("\n");
+    memset(block_a, 1, BLOCK_SIZE);
+    memset(block_b, 2, BLOCK_SIZE);
+    memset(block_c, 3, BLOCK_SIZE);
+
+    for (unsigned short h = 0; h < BLOCK_SIZE; h++)
+        printf("%d\t%s", *(block_a + h), ((h + 1) % BLOCK_WIDTH == 0) ? "\n" : "");
+
+    printf("\n");
+
+    for (unsigned short h = 0; h < BLOCK_SIZE; h++)
+        printf("%d\t%s", *(block_b + h), ((h + 1) % BLOCK_WIDTH == 0) ? "\n" : "");
+
+    printf("\n");
+
+    for (unsigned short h = 0; h < BLOCK_SIZE; h++)
+        printf("%d\t%s", *(block_c + h), ((h + 1) % BLOCK_WIDTH == 0) ? "\n" : "");
+
+    printf("\n");
+
+    block_merge(block_abc, block_a, BLOCK_HEIGHT, BLOCK_WIDTH, 1, 3, 0, 9);
+
+    for (unsigned short h = 0; h < BLOCK_SIZE * 3; h++)
+        printf("%d\t%s", *(block_abc + h), ((h + 1) % BLOCK_WIDTH == 0) ? "\n" : "");
 //
 //    unsigned int diff = 0xffffffff, diff_temp;
 //
@@ -114,21 +128,28 @@ int main() {
 //    };
 //
 
-    unsigned char e_size = n * n, ef_size = (unsigned char) (e_size * 2);
-
-    unsigned char e[n * n] = {
-            0, 1, 2, 3,
-            4, 5, 6, 7,
-            8, 9, 10, 11,
-            12, 13, 14, 15
-    };
-
-    unsigned char f[n * n] = {
-            4, 5, 6, 7,
-            8, 9, 10, 11,
-            12, 13, 14, 15,
-            16, 17, 18, 19
-    };
+//    unsigned char e_size = n * n, ef_size = (unsigned char) (e_size * 3);
+//
+//    unsigned char e[n * n] = {
+//            0, 1, 2, 3,
+//            4, 5, 6, 7,
+//            8, 9, 10, 11,
+//            12, 13, 14, 15
+//    };
+//
+//    unsigned char f[n * n] = {
+//            4, 5, 6, 7,
+//            8, 9, 10, 11,
+//            12, 13, 14, 15,
+//            16, 17, 18, 19
+//    };
+//
+//    unsigned char g[n * n] = {
+//            8, 9, 10, 11,
+//            12, 13, 14, 15,
+//            16, 17, 18, 19,
+//            20, 21, 22, 23
+//    };
 
 //    for (unsigned char i = 0; i < e_size; i++)
 //        printf("%d\t%s", *(e + i), ((i + 1) % n == 0 ? "\n" : ""));
@@ -151,12 +172,13 @@ int main() {
 //
 //    printf("h_min: %d, w_min: %d\n", h_min, w_min);
 
-    unsigned char ef[ef_size];
-    memset(ef, 0, ef_size);
-    memcpy(ef, e, e_size);
-    block_merge(ef, f, n, n, 1, 0, 0, 99);
-
-    for (unsigned char i = 0; i < ef_size; i++)
-        printf("%d\t%s", *(ef + i), ((i + 1) % n == 0 ? "\n" : ""));
+//    unsigned char ef[ef_size];
+//    memset(ef, 0, ef_size);
+//    memcpy(ef, e, e_size);
+//    block_merge(ef, f, n, n, 1, 0, 0, 99);
+//    block_merge(ef, g, n, n, 2, 0, 0, 99);
+//
+//    for (unsigned char i = 0; i < ef_size; i++)
+//        printf("%d\t%s", *(ef + i), ((i + 1) % n == 0 ? "\n" : ""));
 
 }
