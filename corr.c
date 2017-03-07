@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <printf.h>
-#include <stdbool.h>
+//#include <stdbool.h>
 
 #include "config.h"
 #include "corr.h"
@@ -23,7 +23,7 @@ void reconstruct(unsigned char *pixel_image, unsigned char *pixel_image_generate
     /**
      * iterasi tiap block
      */
-    unsigned short i;
+    unsigned short i, count = 0;
 
     /**
      * buffer untuk dx dan dy
@@ -61,9 +61,19 @@ void reconstruct(unsigned char *pixel_image, unsigned char *pixel_image_generate
         block_slice(pixel_image, block_b, (unsigned short) (i - BLOCK_HEIGHT), BLOCK_SIZE);
 
         /**
+         * jika block a dan b sama, tidak perlu dicek
+         * overlappong nya
+         */
+        if (memcmp(block_a, block_b, BLOCK_SIZE) == 0)
+            continue;
+
+        /**
          * hitung dx dan dy
          */
         calculate_xy(block_a, block_b, &dy, &dx);
+
+        if (dy == 0 && abs(dx) == WIDTH_RANGE_OFFSET)
+            continue;
 
         /**
          * iterate offset digunakan pada proses merging
@@ -74,7 +84,7 @@ void reconstruct(unsigned char *pixel_image, unsigned char *pixel_image_generate
          * merge block sesuai dx dan dy
          */
         block_merge(pixel_image_generate, block_a, BLOCK_HEIGHT, BMP_INPUT_WIDTH, iterate_offset, 0, dx);
-        printf("Offset-%d, Iterate-%d\tdy: %d,\tdx: %d\n", i, iterate_offset, dy, dx);
+//        printf("Offset-%d, Iterate-%d\tdy: %d,\tdx: %d\n", i, iterate_offset, dy, dx);
 
         /**
          * kosongkan buffer
@@ -202,11 +212,11 @@ unsigned int diff_xy(unsigned char *block_a, unsigned char *block_b,
                     if ((i - height_shift < 0 && j >= block_width) || (i >= block_height && j - width_shift < 0)) {
 
                     } else if (i - height_shift < 0 || j - width_shift < 0) {
-                        if (SUM_OVERLAP_INDEX)
-                            sum += apply_algo(0, block_b[(i * block_width) + j]);
+//                        if (SUM_OVERLAP_INDEX)
+//                            sum += apply_algo(0, block_b[(i * block_width) + j]);
                     } else if (i >= block_height || j >= block_width) {
-                        if (SUM_OVERLAP_INDEX)
-                            sum += apply_algo(block_a[((i - height_shift) * block_width) + j - width_shift], 0);
+//                        if (SUM_OVERLAP_INDEX)
+//                            sum += apply_algo(block_a[((i - height_shift) * block_width) + j - width_shift], 0);
                     } else {
                         sum += apply_algo(block_a[((i - height_shift) * block_width) + j - width_shift],
                                           block_b[(i * block_width) + j]);
@@ -222,11 +232,11 @@ unsigned int diff_xy(unsigned char *block_a, unsigned char *block_b,
                     if ((i - height_shift < 0 && j + width_shift < 0) || (j >= block_width && i >= block_height)) {
 
                     } else if (i - height_shift < 0 || j >= block_width) {
-                        if (SUM_OVERLAP_INDEX)
-                            sum += apply_algo(0, block_b[(i * block_width) + j + width_shift]);
+//                        if (SUM_OVERLAP_INDEX)
+//                            sum += apply_algo(0, block_b[(i * block_width) + j + width_shift]);
                     } else if (j + width_shift < 0 || i >= block_height) {
-                        if (SUM_OVERLAP_INDEX)
-                            sum += apply_algo(block_a[((i - height_shift) * block_width) + j], 0);
+//                        if (SUM_OVERLAP_INDEX)
+//                            sum += apply_algo(block_a[((i - height_shift) * block_width) + j], 0);
                     } else {
                         sum += apply_algo(block_a[((i - height_shift) * block_width) + j],
                                           block_b[(i * block_width) + j + width_shift]);
@@ -246,11 +256,11 @@ unsigned int diff_xy(unsigned char *block_a, unsigned char *block_b,
                     if ((i + height_shift < 0 && j - width_shift < 0) || (i >= block_height && j >= block_width)) {
 
                     } else if (i + height_shift < 0 || j >= block_width) {
-                        if (SUM_OVERLAP_INDEX)
-                            sum += apply_algo(block_a[(i * block_width) + j - width_shift], 0);
+//                        if (SUM_OVERLAP_INDEX)
+//                            sum += apply_algo(block_a[(i * block_width) + j - width_shift], 0);
                     } else if (j - width_shift < 0 || i >= block_height) {
-                        if (SUM_OVERLAP_INDEX)
-                            sum += apply_algo(0, block_b[((i + height_shift) * block_width) + j]);
+//                        if (SUM_OVERLAP_INDEX)
+//                            sum += apply_algo(0, block_b[((i + height_shift) * block_width) + j]);
                     } else {
                         sum += apply_algo(block_a[(i * block_width) + j - width_shift],
                                           block_b[((i + height_shift) * block_width) + j]);
@@ -266,11 +276,11 @@ unsigned int diff_xy(unsigned char *block_a, unsigned char *block_b,
                     if ((i + height_shift < 0 && j >= block_width) || (i >= block_height && j + width_shift < 0)) {
 
                     } else if (i + height_shift < 0 || j + width_shift < 0) {
-                        if (SUM_OVERLAP_INDEX)
-                            sum += apply_algo(block_a[(i * block_width) + j], 0);
+//                        if (SUM_OVERLAP_INDEX)
+//                            sum += apply_algo(block_a[(i * block_width) + j], 0);
                     } else if (i >= block_height || j >= block_width) {
-                        if (SUM_OVERLAP_INDEX)
-                            sum += apply_algo(0, block_b[((i + height_shift) * block_width) + j + width_shift]);
+//                        if (SUM_OVERLAP_INDEX)
+//                            sum += apply_algo(0, block_b[((i + height_shift) * block_width) + j + width_shift]);
                     } else {
                         sum += apply_algo(block_a[(i * block_width) + j],
                                           block_b[((i + height_shift) * block_width) + j + width_shift]);

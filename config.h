@@ -30,7 +30,7 @@
  * kanan, atas, atau bawah
  */
 #define     HEIGHT_RANGE_OFFSET         7
-#define     WIDTH_RANGE_OFFSET          8
+#define     WIDTH_RANGE_OFFSET          0
 
 /**
  * jika treshold sudah terpenuhi program tidak perlu
@@ -41,8 +41,8 @@
 /**
  * nilai default
  */
-#define     DEFAULT_OVERLAP_VALUE       255
-#define     SUM_OVERLAP_INDEX           false
+#define     DEFAULT_OVERLAP_VALUE       0
+//#define     SUM_OVERLAP_INDEX           false
 
 /**
  * 1. SAD

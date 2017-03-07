@@ -9,3 +9,4 @@ set(SOURCE_FILES main.c bmp.c corr.c)
 #set(SOURCE_FILES split.c corr.c bmp.c)
 
 add_executable(c-bmp ${SOURCE_FILES})
+#target_link_libraries(c-bmp ${CMAKE_CURRENT_LIST_DIR}/assets/libs/libGMFinger.so)

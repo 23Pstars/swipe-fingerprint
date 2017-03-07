@@ -317,5 +317,5 @@ void block_reverse(unsigned char *pixel_image, unsigned char *pixel_image_revers
  * @return
  */
 float block_mean(unsigned char *block_buffer, char height_shift, char width_shift) {
-
+    return 0;
 }
