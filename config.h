@@ -1,8 +1,10 @@
 /**
  * file buffer
  */
-#define     BMP_INPUT                   "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/8RUL2001.bmp"
-#define     BMP_OUTPUT                  "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/ReconstructedBMP.bmp"
+//#define     BMP_INPUT                   "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/AGUS_03_000.bmp"
+//#define     BMP_OUTPUT                  "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/AGUS_03_000Recons.bmp"
+#define     BMP_INPUT                   "/home/zaf/thesis-apps/BMP/assets/8RUL2005.bmp"
+#define     BMP_OUTPUT                  "/home/zaf/thesis-apps/BMP/assets/8RUL2005Recons.bmp"
 
 /**
  * dimensi

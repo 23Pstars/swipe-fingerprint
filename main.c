@@ -40,7 +40,7 @@ int main() {
     free(pixel_image_reversed);
     free(pixel_image_generate);
 
-    printf("\nExecution time: %.10f seconds", (double) (clock() - time_start) / CLOCKS_PER_SEC);
+    printf("\nExecution time: %.10f seconds\n", (double) (clock() - time_start) / CLOCKS_PER_SEC);
 
     return 0;
 }

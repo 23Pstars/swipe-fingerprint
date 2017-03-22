@@ -5,7 +5,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <printf.h>
 //#include <stdbool.h>
 
 #include "config.h"
@@ -23,7 +22,7 @@ void reconstruct(unsigned char *pixel_image, unsigned char *pixel_image_generate
     /**
      * iterasi tiap block
      */
-    unsigned short i, count = 0;
+    unsigned short i;
 
     /**
      * buffer untuk dx dan dy

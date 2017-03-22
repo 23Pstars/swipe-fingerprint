@@ -9,7 +9,7 @@
 //#include "corr.h"
 //#include "bmp.h"
 
-#include "/Users/zaf/CLibs/BLFingerAPI.h"
+#include "/Users/zaf/thesis-apps/Share-Libs/BLFingerAPI.h"
 
 //#define     BLOCK_A         "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/blocks/block-0.bmp"
 //#define     BLOCK_B         "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/blocks/block-8.bmp"
