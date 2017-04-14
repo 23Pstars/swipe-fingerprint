@@ -4,42 +4,36 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-//#include <stdbool.h>
-//#include <memory.h>
-//#include "corr.h"
-//#include "bmp.h"
+#include <stdbool.h>
+#include <memory.h>
 
-#include "/Users/zaf/thesis-apps/Share-Libs/BLFingerAPI.h"
+#include "corr.h"
+#include "bmp.h"
 
-//#define     BLOCK_A         "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/blocks/block-0.bmp"
-//#define     BLOCK_B         "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/blocks/block-8.bmp"
-//#define     BLOCK_c         "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/blocks/block-16.bmp"
-//#define     BLOCK_HEIGHT    8
-//#define     BLOCK_WIDTH     128
-//#define     BLOCK_SIZE      BLOCK_HEIGHT * BLOCK_WIDTH
-//#define     VECTOR_WIDTH    128
-//
-//#define     n               4
+#define     BLOCK_A         "/Users/zaf/thesis-apps/swipe-fingerprint/assets/blocks/block-0.bmp"
+#define     BLOCK_B         "/Users/zaf/thesis-apps/swipe-fingerprint/assets/blocks/block-8.bmp"
+#define     BLOCK_c         "/Users/zaf/thesis-apps/swipe-fingerprint/assets/blocks/block-16.bmp"
+#define     BLOCK_HEIGHT    8
+#define     BLOCK_WIDTH     128
+#define     BLOCK_SIZE      BLOCK_HEIGHT * BLOCK_WIDTH
+#define     VECTOR_WIDTH    128
+
+#define     n               4
 
 
 int main() {
 
-//    FILE *bmp_ptr;
-//    unsigned int offset;
-//    unsigned char *block_a = calloc(BLOCK_SIZE, sizeof(unsigned char)),
-//            *block_b = calloc(BLOCK_SIZE, sizeof(unsigned char)),
-//            *block_c = calloc(BLOCK_SIZE, sizeof(unsigned char)),
-//            *block_abc = calloc(BLOCK_SIZE * 3, sizeof(unsigned char));
+    FILE *bmp_ptr;
+    unsigned int offset;
+    unsigned char *block_a = calloc(BLOCK_SIZE, sizeof(unsigned char)),
+            *block_b = calloc(BLOCK_SIZE, sizeof(unsigned char)),
+            *block_c = calloc(BLOCK_SIZE, sizeof(unsigned char)),
+            *block_abc = calloc(BLOCK_SIZE * 3, sizeof(unsigned char));
 
-    char *GMAPI_Version = malloc(200 * sizeof(char));
-    GMAPI_GetVersion(GMAPI_Version);
+    bmp_ptr = open_bmp_file(BLOCK_A, "r");
+    fseek(bmp_ptr, 1078, SEEK_SET);
+    fread(block_a, 1, BLOCK_SIZE, bmp_ptr);
 
-    printf("GMAPI_Version: %s\n", GMAPI_Version);
-//
-//    bmp_ptr = open_bmp_file(BLOCK_A, "r");
-//    fseek(bmp_ptr, 1078, SEEK_SET);
-//    fread(block_a, 1, BLOCK_SIZE, bmp_ptr);
-//
 //    fseek(bmp_ptr, 1078, SEEK_SET);
 //    memset(block_b, 0, BLOCK_WIDTH);
 //    fread(block_b + BLOCK_WIDTH, 1, BLOCK_SIZE - BLOCK_WIDTH, bmp_ptr);
@@ -54,15 +48,15 @@ int main() {
 //    memset(block_b, 2, BLOCK_SIZE);
 //    memset(block_c, 3, BLOCK_SIZE);
 //
-//    for (unsigned short h = 0; h < BLOCK_SIZE; h++)
-//        printf("%d\t%s", *(block_a + h), ((h + 1) % BLOCK_WIDTH == 0) ? "\n" : "");
-//
-//    printf("\n");
-//
-//    for (unsigned short h = 0; h < BLOCK_SIZE; h++)
-//        printf("%d\t%s", *(block_b + h), ((h + 1) % BLOCK_WIDTH == 0) ? "\n" : "");
-//
-//    printf("\n");
+    for (unsigned short h = 0; h < BLOCK_SIZE; h++)
+        printf("%d\t%s", *(block_a + h), ((h + 1) % BLOCK_WIDTH == 0) ? "\n" : "");
+
+    printf("\n");
+
+    for (unsigned short h = 0; h < BLOCK_SIZE; h++)
+        printf("%d\t%s", *(block_b + h), ((h + 1) % BLOCK_WIDTH == 0) ? "\n" : "");
+
+    printf("\n");
 //
 //    for (unsigned short h = 0; h < BLOCK_SIZE; h++)
 //        printf("%d\t%s", *(block_c + h), ((h + 1) % BLOCK_WIDTH == 0) ? "\n" : "");

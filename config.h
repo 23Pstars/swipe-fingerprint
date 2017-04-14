@@ -1,10 +1,14 @@
 /**
  * file buffer
  */
-//#define     BMP_INPUT                   "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/AGUS_03_000.bmp"
-//#define     BMP_OUTPUT                  "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/AGUS_03_000Recons.bmp"
-#define     BMP_INPUT                   "/home/zaf/thesis-apps/BMP/assets/8RUL2005.bmp"
-#define     BMP_OUTPUT                  "/home/zaf/thesis-apps/BMP/assets/8RUL2005Recons.bmp"
+
+#ifdef __APPLE__
+#define     BMP_INPUT_DIR               "/Users/zaf/thesis-apps/Sample-Data/RawImageDB-Zaf/"
+#define     BMP_OUTPUT_DIR              "/Users/zaf/thesis-apps/swipe-fingerprint/assets/"
+#elif __linux__
+#define     BMP_INPUT_DIR               "/home/zaf/thesis-apps/Sample-Data/RawImageDB-Zaf/"
+#define     BMP_OUTPUT_DIR              "/home/zaf/thesis-apps/swipe-fingerprint/assets/"
+#endif
 
 /**
  * dimensi
@@ -12,6 +16,7 @@
 #define     BMP_INPUT_WIDTH             128
 #define     BMP_INPUT_HEIGHT            4000
 #define     BMP_OUTPUT_WIDTH            128
+#define     BMP_OUTPUT_WIDTH2           126
 #define     BMP_OUTPUT_HEIGHT           400
 
 /**
@@ -25,7 +30,6 @@
  */
 #define     BLOCK_HEIGHT                8
 #define     BLOCK_SIZE                  BLOCK_HEIGHT * BMP_INPUT_WIDTH
-#define     BLOCK_COUNT                 BMP_INPUT_SIZE / BLOCK_HEIGHT
 
 /**
  * offset tiap pencocokan apakah geser kiri,
@@ -33,6 +37,8 @@
  */
 #define     HEIGHT_RANGE_OFFSET         7
 #define     WIDTH_RANGE_OFFSET          0
+#define     JUMPING_RANGE               3
+#define     JUMPING_COUNT               3
 
 /**
  * jika treshold sudah terpenuhi program tidak perlu
@@ -44,7 +50,6 @@
  * nilai default
  */
 #define     DEFAULT_OVERLAP_VALUE       0
-//#define     SUM_OVERLAP_INDEX           false
 
 /**
  * 1. SAD
@@ -52,3 +57,4 @@
  * 3. NCC
  */
 #define     USE_ALGO                    1
+#define     USE_JUMPING                 1

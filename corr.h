@@ -9,3 +9,5 @@ unsigned int apply_algo(unsigned char, unsigned char);
 unsigned int SAD_algo(unsigned char, unsigned char);
 
 unsigned int SSD_algo(unsigned char, unsigned char);
+
+short average_dy(short *);

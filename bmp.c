@@ -34,17 +34,17 @@ FILE *open_bmp_file(char *file_path, char *mode) {
  *
  * @param bmpheader
  */
-void load_bmp(BMPHEADER *bmpheader, unsigned char *pixel_image) {
+void load_bmp(char *bmp_input, BMPHEADER *bmpheader, unsigned char *pixel_image) {
 
     /**
      * baca header
      */
-    read_bmp_header(&bmpheader->fileheader, &bmpheader->infoheader, bmpheader->colourindex);
+    read_bmp_header(bmp_input, &bmpheader->fileheader, &bmpheader->infoheader, bmpheader->colourindex);
 
     /**
      * baca data pixel image
      */
-    read_bmp_pixel_image(pixel_image, bmpheader->infoheader.imagesize, bmpheader->fileheader.offset);
+    read_bmp_pixel_image(bmp_input, pixel_image, bmpheader->infoheader.imagesize, bmpheader->fileheader.offset);
 
 }
 
@@ -54,9 +54,10 @@ void load_bmp(BMPHEADER *bmpheader, unsigned char *pixel_image) {
  * @param infoheader
  * @param colourindex
  */
-void read_bmp_header(FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX *colourindex) {
+void
+read_bmp_header(char *bmp_input, FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX *colourindex) {
 
-    FILE *bmp_source_ptr = open_bmp_file(BMP_INPUT, "r");
+    FILE *bmp_source_ptr = open_bmp_file(bmp_input, "r");
 
     /**
      * baca file header
@@ -107,9 +108,10 @@ void read_bmp_header(FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX
  * @param imagesize
  * @param offset
  */
-void read_bmp_pixel_image(unsigned char *pixel_image, unsigned int imagesize, unsigned int offset) {
+void read_bmp_pixel_image(char *bmp_input, unsigned char *pixel_image, unsigned int imagesize,
+                          unsigned int offset) {
 
-    FILE *bmp_source_ptr = open_bmp_file(BMP_INPUT, "r");
+    FILE *bmp_source_ptr = open_bmp_file(bmp_input, "r");
 
     /**
      * geser ke data utama
@@ -130,11 +132,12 @@ void read_bmp_pixel_image(unsigned char *pixel_image, unsigned int imagesize, un
  * @param bmpheader
  * @param pixel_image
  */
-void save_bmp(BMPHEADER *bmpheader, unsigned char *pixel_image) {
+void save_bmp(char *bmp_out, BMPHEADER *bmpheader, unsigned char *pixel_image) {
 
     /**
      * modif header sesuai ukuran output
      */
+    bmpheader->infoheader.width = BMP_OUTPUT_WIDTH2;
     bmpheader->infoheader.height = BMP_OUTPUT_HEIGHT;
     bmpheader->infoheader.imagesize = BMP_OUTPUT_SIZE;
 
@@ -149,7 +152,7 @@ void save_bmp(BMPHEADER *bmpheader, unsigned char *pixel_image) {
     /**
      * tulis data pixel
      */
-    write_bmp(&bmpheader->fileheader, &bmpheader->infoheader, bmpheader->colourindex, pixel_image);
+    write_bmp(bmp_out, &bmpheader->fileheader, &bmpheader->infoheader, bmpheader->colourindex, pixel_image);
 }
 
 /**
@@ -160,9 +163,10 @@ void save_bmp(BMPHEADER *bmpheader, unsigned char *pixel_image) {
  * @param colourindex
  * @param pixel_image
  */
-void write_bmp(FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX *colourindex, unsigned char *pixel_image) {
+void write_bmp(char *bmp_out, FILEHEADER *fileheader, INFOHEADER *infoheader, COLOURINDEX *colourindex,
+               unsigned char *pixel_image) {
 
-    FILE *bmp_target_ptr = open_bmp_file(BMP_OUTPUT, "wb");
+    FILE *bmp_target_ptr = open_bmp_file(bmp_out, "wb");
 
     fwrite(&fileheader->type, 2, 1, bmp_target_ptr);
     fwrite(&fileheader->size, 4, 1, bmp_target_ptr);

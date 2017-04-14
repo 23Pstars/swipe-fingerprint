@@ -5,7 +5,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-//#include <stdbool.h>
 
 #include "config.h"
 #include "corr.h"
@@ -18,6 +17,12 @@
  * @param pixel_image_generate
  */
 void reconstruct(unsigned char *pixel_image, unsigned char *pixel_image_generate) {
+
+    /**
+     * menyimpan nilai dx dan dy sejumlah JUMPING_RANGE
+     * nilai sebelumnya
+     */
+    short j = 0, *prev_dy = malloc(JUMPING_RANGE * sizeof(short));
 
     /**
      * iterasi tiap block
@@ -69,7 +74,18 @@ void reconstruct(unsigned char *pixel_image, unsigned char *pixel_image_generate
         /**
          * hitung dx dan dy
          */
-        calculate_xy(block_a, block_b, &dy, &dx);
+        if (!USE_JUMPING) {
+            calculate_xy(block_a, block_b, &dy, &dx);
+
+        } else if (j == JUMPING_RANGE || j < 0) {
+            dy = average_dy(prev_dy);
+            dx = WIDTH_RANGE_OFFSET;
+            if (j == JUMPING_RANGE)
+                j = -JUMPING_COUNT;
+        } else {
+            calculate_xy(block_a, block_b, &dy, &dx);
+            *(prev_dy + j) = dy;
+        }
 
         if (dy == 0 && abs(dx) == WIDTH_RANGE_OFFSET)
             continue;
@@ -83,13 +99,16 @@ void reconstruct(unsigned char *pixel_image, unsigned char *pixel_image_generate
          * merge block sesuai dx dan dy
          */
         block_merge(pixel_image_generate, block_a, BLOCK_HEIGHT, BMP_INPUT_WIDTH, iterate_offset, 0, dx);
-//        printf("Offset-%d, Iterate-%d\tdy: %d,\tdx: %d\n", i, iterate_offset, dy, dx);
+//        printf("Offset-%d, Iterate-%d\tdy: %d,\tdx: %d\tprev_xy(%d): %d\n", i, iterate_offset, dy, dx, j,
+//               *(prev_dy + j));
 
         /**
          * kosongkan buffer
          */
         memset(block_a, 0, BLOCK_SIZE);
         memset(block_b, 0, BLOCK_SIZE);
+
+        j++;
 
     }
 
@@ -360,4 +379,12 @@ unsigned int SSD_algo(unsigned char a, unsigned char b) {
  */
 float NCC_algo(unsigned char a, unsigned char b, float u) {
     return 0;
+}
+
+short average_dy(short *prev_dy) {
+    short sum = 0;
+    unsigned char i;
+    for (i = 0; i < JUMPING_RANGE; i++)
+        sum += *(prev_dy + i);
+    return (short) ((double) sum / JUMPING_RANGE);
 }

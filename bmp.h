@@ -8,6 +8,8 @@
  * - http://www.c-faq.com/struct/align.html
  */
 
+#include <stdio.h>
+
 #define     BMP_INFO_BIT                8
 #define     BMP_COLOUR_INDEX_LENGTH     128
 
@@ -43,15 +45,15 @@ typedef struct {
 
 FILE *open_bmp_file(char *, char *);
 
-void load_bmp(BMPHEADER *, unsigned char *);
+void load_bmp(char *,BMPHEADER *, unsigned char *);
 
-void read_bmp_header(FILEHEADER *, INFOHEADER *, COLOURINDEX *);
+void read_bmp_header(char *,FILEHEADER *, INFOHEADER *, COLOURINDEX *);
 
-void read_bmp_pixel_image(unsigned char *, unsigned int, unsigned int);
+void read_bmp_pixel_image(char *,unsigned char *, unsigned int, unsigned int);
 
-void save_bmp(BMPHEADER *, unsigned char *);
+void save_bmp(char *,BMPHEADER *, unsigned char *);
 
-void write_bmp(FILEHEADER *, INFOHEADER *, COLOURINDEX *, unsigned char *);
+void write_bmp(char *,FILEHEADER *, INFOHEADER *, COLOURINDEX *, unsigned char *);
 
 void block_merge(unsigned char *, unsigned char *, unsigned char, unsigned char, short, short, short);
 

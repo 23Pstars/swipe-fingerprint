@@ -14,4 +14,4 @@ clean:
 	rm -f main gmfinger *.o
 
 cleans:
-	rm -f assets/*Recons.bmp assets/*.txt
+	rm -f assets/*.bmp assets/*.txt
