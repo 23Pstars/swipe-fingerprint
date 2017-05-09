@@ -5,11 +5,11 @@
 
 #define     RECONSTRUCTED_WIDTH             128
 #define     RECONSTRUCTED_HEIGHT            400
-#define     RECONSTRUCTED_SIZE              RECONSTRUCTED_WIDTH * RECONSTRUCTED_HEIGHT
-#define     RECONSTRUCTED_FILE_1            "/home/zaf/thesis-apps/swipe-fingerprint/assets/HC/HCL0000.bmp"
-#define     RECONSTRUCTED_FILE_2            "/home/zaf/thesis-apps/swipe-fingerprint/assets/HC/HCL5000.bmp"
+#define     RECONSTRUCTED_SIZE              (RECONSTRUCTED_WIDTH * RECONSTRUCTED_HEIGHT)
+#define     RECONSTRUCTED_FILE_1            "/home/zaf/thesis-apps/swipe-fingerprint/assets/HA/HAL0000.bmp"
+#define     RECONSTRUCTED_FILE_2            "/home/zaf/thesis-apps/swipe-fingerprint/assets/HA/HAL0000.bmp"
 
-#define     FEATURE_DATA_SIZE               1024*256
+#define     FEATURE_DATA_SIZE               (1024*256)
 #define     FEATURE_DATA_FILE_1             "/home/zaf/thesis-apps/swipe-fingerprint/assets/FD1.txt"
 #define     FEATURE_DATA_FILE_2             "/home/zaf/thesis-apps/swipe-fingerprint/assets/FD2.txt"
 
@@ -39,9 +39,9 @@ int main() {
     fseek(bmp_ptr_2, 1078, SEEK_SET);
     fread(pixel_image_2, 1, RECONSTRUCTED_SIZE, bmp_ptr_2);
 
-    unsigned char *pFD_1 = malloc(FEATURE_DATA_SIZE * sizeof(char));
+    unsigned char *pFD_1 = calloc(FEATURE_DATA_SIZE, sizeof(char));
     printf("Extract FD1: %d\n", GMFAPI_Extraction(pixel_image_1, pFD_1));
-    unsigned char *pFD_2 = malloc(FEATURE_DATA_SIZE * sizeof(char));
+    unsigned char *pFD_2 = calloc(FEATURE_DATA_SIZE, sizeof(char));
     printf("Extract FD2: %d\n", GMFAPI_Extraction(pixel_image_2, pFD_2));
 
     printf("FD1 vs FD2: %d\n", GMFAPI_Matching(pFD_1, pFD_2));
@@ -53,12 +53,12 @@ int main() {
         exit(-1);
     }
 
-    unsigned short h;
+    unsigned int h;
     for (h = 0; h < 1024; h++) {
-//        fprintf(txt_ptr_1, "%d\t%s", *(pixel_image_1 + h), ((h + 1) % RECONSTRUCTED_WIDTH == 0 ? "\n" : ""));
-//        fprintf(txt_ptr_2, "%d\t%s", *(pixel_image_2 + h), ((h + 1) % RECONSTRUCTED_WIDTH == 0 ? "\n" : ""));
-        fprintf(txt_ptr_1, "%d ", *(pFD_1 + h));
-        fprintf(txt_ptr_2, "%d ", *(pFD_2 + h));
+        fprintf(txt_ptr_1, "%d\t%s", *(pixel_image_1 + h), ((h + 1) % 4 == 0 ? "\n" : ""));
+        fprintf(txt_ptr_2, "%d\t%s", *(pixel_image_2 + h), ((h + 1) % 4 == 0 ? "\n" : ""));
+//        fprintf(txt_ptr_1, "%d ", *(pFD_1 + h));
+//        fprintf(txt_ptr_2, "%d ", *(pFD_2 + h));
     }
 
     return 0;

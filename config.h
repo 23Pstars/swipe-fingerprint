@@ -37,8 +37,8 @@
  */
 #define     HEIGHT_RANGE_OFFSET         7
 #define     WIDTH_RANGE_OFFSET          0
-#define     JUMPING_RANGE               3
-#define     JUMPING_COUNT               3
+#define     JUMPING_RANGE               2
+#define     JUMPING_COUNT               10
 
 /**
  * jika treshold sudah terpenuhi program tidak perlu

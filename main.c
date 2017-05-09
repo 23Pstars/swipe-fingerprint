@@ -4,7 +4,7 @@
  *
  * Universitas Gadjah Mada
  *
- * Rekonstruksi overlapping BMP image
+ * Reconstruct overlap image in swipe fingerprint
  */
 
 #include <stdio.h>
@@ -33,7 +33,6 @@ int main() {
 
             sprintf(bmp_input, "%sHA/HAL%d00%d.bmp", BMP_INPUT_DIR, i, j);
             sprintf(bmp_output, "%sHA/HAL%d00%d.bmp", BMP_OUTPUT_DIR, i, j);
-            printf("%s\n%s\n\n", bmp_input, bmp_output);
 
             memset(pixel_image_generate, DEFAULT_OVERLAP_VALUE, BMP_OUTPUT_SIZE);
 
@@ -51,7 +50,10 @@ int main() {
     free(pixel_image_reversed);
     free(pixel_image_generate);
 
-    printf("\nExecution time: %.10f seconds\n", (double) (clock() - time_start) / CLOCKS_PER_SEC);
+    /**
+     * execution time
+     */
+    printf("\n%.10f\n", (double) (clock() - time_start) / CLOCKS_PER_SEC);
 
     return 0;
 }
