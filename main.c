@@ -53,7 +53,7 @@ int main() {
     /**
      * execution time
      */
-    printf("\n%.10f\n", (double) (clock() - time_start) / CLOCKS_PER_SEC);
+    printf("%.10f\n", (double) (clock() - time_start) / CLOCKS_PER_SEC);
 
     return 0;
 }
