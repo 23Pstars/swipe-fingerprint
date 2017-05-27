@@ -46,9 +46,9 @@ int main() {
         }
     }
 
-    free(pixel_image);
-    free(pixel_image_reversed);
-    free(pixel_image_generate);
+//    free(pixel_image);
+//    free(pixel_image_reversed);
+//    free(pixel_image_generate);
 
     /**
      * execution time
