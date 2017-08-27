@@ -1,4 +1,4 @@
-MAIN_HEADERS = bmp.h corr.h main.h config.h
+MAIN_HEADERS = bmp.h corr.h config.h
 MAIN_OBJECTS = bmp.o corr.o main.o
 
 %.o: %.c $(MAIN_HEADERS)
@@ -19,7 +19,7 @@ match: match.c
 
 # bersihkan executable
 clean:
-	rm -f main gmfinger match *.o
+	rm -f main gmfinger match 4121 *.o
 
 # bersihkan file dump lainnya
 cleans:
@@ -43,3 +43,10 @@ run-match: clean match
 
 run-match-multi: clean match
 	@for ii in {1..20}; do ./matcher.sh ${ii}; done
+
+OBJ_4121 = bmp.o corr.o 4121.o
+4121: $(OBJ_4121)
+	gcc $(OBJ_4121) -o $@
+
+run-4121: clean 4121
+	./4121.sh

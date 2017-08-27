@@ -27,24 +27,20 @@ int main() {
             *pixel_image_generate = malloc(BMP_OUTPUT_SIZE * sizeof(unsigned char));
 
     char bmp_input[250], bmp_output[250];
-    unsigned char i, j;
-    for (i = 0; i <= 5; i++) {
-        for (j = 0; j <= 5; j++) {
+    unsigned char i = 0, j = 0;
 
-            sprintf(bmp_input, "%sHA/HAL%d00%d.bmp", BMP_INPUT_DIR, i, j);
-            sprintf(bmp_output, "%sHA/HAL%d00%d.bmp", BMP_OUTPUT_DIR, i, j);
+    sprintf(bmp_input, "%sHA/HAL%d00%d.bmp", BMP_INPUT_DIR, i, j);
+    sprintf(bmp_output, "%sHA/HAL%d00%d.bmp", BMP_OUTPUT_DIR, i, j);
 
-            memset(pixel_image_generate, DEFAULT_OVERLAP_VALUE, BMP_OUTPUT_SIZE);
+    memset(pixel_image_generate, DEFAULT_OVERLAP_VALUE, BMP_OUTPUT_SIZE);
 
-            load_bmp(bmp_input, &bmpheader, pixel_image);
+    load_bmp(bmp_input, &bmpheader, pixel_image);
 
-            block_reverse(pixel_image, pixel_image_reversed);
+    block_reverse(pixel_image, pixel_image_reversed);
 
-            reconstruct(pixel_image_reversed, pixel_image_generate);
+    reconstruct(pixel_image_reversed, pixel_image_generate);
 
-            save_bmp(bmp_output, &bmpheader, pixel_image_generate);
-        }
-    }
+    save_bmp(bmp_output, &bmpheader, pixel_image_generate);
 
 //    free(pixel_image);
 //    free(pixel_image_reversed);

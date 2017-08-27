@@ -118,8 +118,8 @@ void reconstruct(unsigned char *pixel_image, unsigned char *pixel_image_generate
      * untuk melakukan rekonstruksi banyak gambar sekaligus,
      * fungsi `free()` sering membuat error
      */
-    free(block_a);
-    free(block_b);
+//    free(block_a);
+//    free(block_b);
 
 }
 

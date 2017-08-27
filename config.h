@@ -57,4 +57,4 @@
  * 3. NCC
  */
 #define     USE_ALGO                    1
-#define     USE_JUMPING                 0
+#define     USE_JUMPING                 1
