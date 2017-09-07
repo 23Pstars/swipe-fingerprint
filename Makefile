@@ -9,17 +9,13 @@ MAIN_OBJECTS = bmp.o corr.o main.o
 main: $(MAIN_OBJECTS)
 	gcc $(MAIN_OBJECTS) -o $@
 
-# compile program feature extraction dan matching sidik jari
-# menggunakan library libGMFinger.so
-gmf: gmfinger.c
-	gcc -L/home/zaf/thesis-apps/Share-Libs -Wall -o gmfinger gmfinger.c -lGMFinger
-
+# compile program matcher
 match: match.c
 	gcc -L/home/zaf/thesis-apps/Share-Libs -Wall -o match match.c -lGMFinger
 
 # bersihkan executable
 clean:
-	rm -f main gmfinger match 4121 *.o
+	rm -f main gmfinger match 4121 4122 4123 *.o
 
 # bersihkan file dump lainnya
 cleans:
@@ -34,15 +30,14 @@ run-main: clean main
 run-main-multi: clean main
 	@for i in {1..10}; do ./main; sleep 1s; done
 
-# jalankan program matching
-run-gmf: clean gmf
-	./gmfinger
-
-run-match: clean match
-	./matcher.sh
-
+# matcher selama beberapa kali
 run-match-multi: clean match
 	@for ii in {1..20}; do ./matcher.sh ${ii}; done
+
+
+# --------------
+# uji coba hasil
+# --------------
 
 OBJ_4121 = bmp.o corr.o 4121.o
 4121: $(OBJ_4121)
@@ -50,3 +45,13 @@ OBJ_4121 = bmp.o corr.o 4121.o
 
 run-4121: clean 4121
 	./4121.sh
+
+OBJ_4122 = bmp.o corr.o 4122.o
+4122: $(OBJ_4122)
+	gcc $(OBJ_4122) -o $@
+
+run-4122: clean 4122
+	./4122
+
+4123: 4123.o
+	gcc -L/home/zaf/thesis-apps/Share-Libs -Wall -o 4123 4123.c -lGMFinger

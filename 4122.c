@@ -1,6 +1,10 @@
 /**
- * Program inti untuk melakukan rekonstruksi terhadap
- * semua data set 6 jari x 6 kali pengambilan
+ * Ahmad Zafrullah
+ * https://zaf.web.id
+ *
+ * Universitas Gadjah Mada
+ *
+ * Reconstruct overlap image in swipe fingerprint
  */
 
 #include <stdio.h>
@@ -15,6 +19,10 @@
 int main() {
 
     clock_t time_start = clock();
+
+    char file1[256];
+    sprintf(file1, "%s/times2/range_%d.csv", BMP_OUTPUT_DIR, JUMPING_RANGE);
+    FILE *times_ptr = fopen(file1, "a");
 
     BMPHEADER bmpheader;
     unsigned char
@@ -50,6 +58,7 @@ int main() {
      * execution time
      */
     printf("%.10f\n", (double) (clock() - time_start) / CLOCKS_PER_SEC);
+//    fprintf(times_ptr, "%d,%f\n", JUMPING_COUNT, (double) (clock() - time_start) / CLOCKS_PER_SEC);
 
     return 0;
 }

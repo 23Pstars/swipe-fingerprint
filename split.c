@@ -1,5 +1,6 @@
 /**
- * split to each block
+ * untuk keperluan debugging, split gambar sidik jari
+ * dari sensor swipe menjadi masing-masing block 8 pixel
  */
 
 #include <stdio.h>
@@ -9,7 +10,7 @@
 #include "config.h"
 #include "bmp.h"
 
-#define OUTPUT_PATH "/Users/zaf/Google Drive/Kuliah/Universitas Gadjah Mada (S2)/thesis/v2/apps/BMP/assets/block/block-"
+#define OUTPUT_PATH "/Users/zaf/thesis-apps/swipe-fingerprint/assets/block/block-"
 
 int main() {
 

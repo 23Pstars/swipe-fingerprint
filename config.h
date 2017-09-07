@@ -37,8 +37,8 @@
  */
 #define     HEIGHT_RANGE_OFFSET         7
 #define     WIDTH_RANGE_OFFSET          0
-#define     JUMPING_RANGE               2
-#define     JUMPING_COUNT               0
+#define     JUMPING_RANGE               4
+#define     JUMPING_COUNT               20
 
 /**
  * jika treshold sudah terpenuhi program tidak perlu
@@ -57,4 +57,4 @@
  * 3. NCC
  */
 #define     USE_ALGO                    1
-#define     USE_JUMPING                 1
+#define     USE_JUMPING                 0
