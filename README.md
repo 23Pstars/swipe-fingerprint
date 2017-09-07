@@ -1,3 +1,3 @@
-### Perintah
+# Rekonstruksi gambar sidik jari pada sensor swipe menggunakan metode predictive overlap 
 
-Informasi lebih detil di `Makefile`.  
+Informasi perintah lebih detil di `Makefile`.  
